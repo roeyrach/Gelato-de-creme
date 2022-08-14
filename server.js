@@ -1,4 +1,6 @@
 const express = require("express");
+const mongoclient = require('mongodb');
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const session = require('express-session')
@@ -78,11 +80,13 @@ app.get("/adminReminder",function(req,res){
 app.get("/signin",function(req,res){
     res.sendFile(__dirname + "/public/signIn.html");
 });
-
+app.get("/showData",async(req,res)=>{
+    const all = await User.find({});
+    res.json(all);
+})
 app.post("/signin",async (req,res)=>{
     const {email,password} = req.body;
     const user = await User.findOne({email});
-    const adminStatus = user.admin;
     if (!user){
         console.log("No such user");
         return res.redirect("/signin");
@@ -96,7 +100,7 @@ app.post("/signin",async (req,res)=>{
     req.session.fullname = user.fullname;
     req.session.email = user.email;
     req.session.password = user.password;
-    if (adminStatus){
+    if (user.admin){
         req.session.isAdmin = true;
         res.redirect("/adminMenu");
     }else{
@@ -118,6 +122,10 @@ app.post("/logout", (req,res)=>{
         if (err) throw err;
         res.redirect("/");
     });
+});
+
+app.get("/adminMenu/iceCreams",isAdmin,function(req,res){
+    res.sendFile(__dirname + "/public/adminIceCreamsMenu.html");
 });
 
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));

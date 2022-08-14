@@ -50,3 +50,18 @@ function check(){
 		}
 		)});
 }
+function showData(){
+	$("#users").css('visibility','visible');
+	$.get('showData',function(data,status){
+		for (let i=0; i< data.length; i++){
+			var row = "<tr><td>" + data[i].fullname + "</td><td>" + data[i].email + "</td><td>" + data[i].admin + "</td></tr>";
+			$("#userstable").append(row);
+		}
+	});
+}
+function redirectToIceCreamsMenu(){
+	window.location.replace("/adminMenu/iceCreams");
+}
+function showIceCreams(){
+	$("#iceCreams").css('visibility','visible');
+}
