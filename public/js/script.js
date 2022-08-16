@@ -59,6 +59,16 @@ function showData(){
 		}
 	});
 }
+function showIceCreamsList(){
+	$("#iceCreams").css('visibility','visible');
+	$.get('showIceCreamsList',function(data,status){
+		for (let i=0; i< data.length; i++){
+			var row = "<tr><td>" + data[i].name + "</td><td>" + data[i].flavor + "</td><td>" + data[i].quantity + 
+			"</td><td>" + data[i].price +"</td></tr>";
+			$("#iceCreamsTable").append(row);
+		}
+	});
+}
 function redirectToIceCreamsMenu(){
 	window.location.replace("/adminMenu/iceCreams");
 }

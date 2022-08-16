@@ -48,13 +48,14 @@
     </section>
     <section>
         <h1 class="heading">Admin Options</h1>
-        <button onclick="showIceCreams()">Ice Creams List</button>
+        <button onclick="showIceCreamsList()">Ice Creams List</button>
         <div id="iceCreams" class="box-container" style="visibility: hidden;">
             <table id="iceCreamsTable" style="width:100%">
                 <tr>
-                  <th>Flavor</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
+                    <th>Name</th>
+                    <th>Flavor</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
                 </tr>
               </table>
             </div>
@@ -66,7 +67,7 @@
                 <div class="box">
                     <div class="inputBox">
                         <span>name</span>
-                        <input type="text" name="flavor"  placeholder="enter name" />
+                        <input type="text" name="name"  placeholder="enter name" />
                     </div>
 
                     <div class="inputBox">
@@ -75,12 +76,12 @@
                     </div>
 
                     <div class="inputBox">
-                        <span>Quantity</span>
+                        <span>Quantity In KG</span>
                         <input type="number" name="quantity" placeholder="enter quantity" />
                     </div>
                     <div class="inputBox">
-                        <span>Price</span>
-                        <input type="password" id="price" name="price" placeholder="enter price" />
+                        <span>Price In Dollars Per KG</span>
+                        <input type="number" id="price" name="price" placeholder="enter price" />
                     </div>
                 </div>
             </div>
