@@ -9,6 +9,7 @@ const app = express();
 const connectDB = require("./config/db");
 const mongoURI = config.get("mongoURI");
 const User = require("./models/User");
+const IceCream = require("./models/IceCream");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const PORT = 8081;
@@ -64,6 +65,37 @@ app.post('/signup', async (req,res) =>{
     await user.save();
     res.redirect("/signin");
 }); 
+
+app.post('/addIceCream', async (req,res) =>{
+    const name = req.body.name;
+    const flavor = req.body.flavor;
+    const quantity = req.body.quantity;
+    const price = req.body.price;
+
+    let iceCream = await IceCream.findOne({ name });
+    if (iceCream){
+        alert("Ice Cream already exists...");
+        return res.redirect("/addIceCream");    
+    }
+
+    iceCream = new IceCream({
+        name,
+        flavor,
+        quantity,
+        price
+    });
+    await iceCream.save();
+    res.redirect("/adminMenu");
+}); 
+app.get("/showIceCreamsList",async(req,res)=>{
+    const all = await IceCream.find({});
+    res.json(all);
+})
+
+app.post("/deleteIceCream",async(req,res)=>{
+    await IceCream.findOneAndDelete({"name": req.body.iceCreamName});
+    res.redirect("/adminMenu/iceCreams")
+})
 
 app.get("/loginReminder",function(req,res){
     res.sendFile(__dirname+ "/public/loginReminder.html");
