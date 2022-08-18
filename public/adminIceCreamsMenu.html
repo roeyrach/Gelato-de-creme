@@ -48,9 +48,9 @@
     </section>
     <section>
         <h1 class="heading">Admin Options</h1>
-        <button onclick="showIceCreamsList()">Ice Creams List</button>
-        <div id="iceCreams" class="box-container" style="visibility: hidden;">
-            <table id="iceCreamsTable" style="width:100%">
+        <button onclick="searchIceCreamsList1()">Ice-Creams List</button>
+        <div id="iceCreams1" class="box-container" style="visibility: hidden;">
+            <table id="iceCreamsTable1" style="width:100%; text-align: center;" >
                 <tr>
                     <th>Name</th>
                     <th>Flavor</th>
@@ -90,7 +90,7 @@
     </section>
     <section id="order" class="order">
         <h1 class="heading">Search</h1>
-        <form action="/search" method="POST">
+        <form action="/searchResults" method="get">
             <div class="box-container">
                 <div class="box">
                     <div class="inputBox">
@@ -104,7 +104,7 @@
                     <br>
                     <div class="inputBox">
                         <span>Search By Specific Name</span>
-                        <input type="text" name="iceCreamName" placeholder="enter name" />
+                        <input type="text" id="spetext" name="iceCreamName" placeholder="enter name" />
                     </div>
                 
                     <div class="inputBox">
@@ -117,12 +117,11 @@
                     </div>
                     <div class="inputBox">
                         <span>Search By Specific Price</span>
-                        <input type="password" id="price" name="price" placeholder="enter price" />
+                        <input type="password" id="price1" name="price" placeholder="enter price" />
                     </div>
-                </div>
+            <input type="submit" value="Search"  class="btn"/>
             </div>
-            <input type="submit" value="Search" class="btn"/>
-        </form>
+            </form>
     </section>
     <section class="order" id="order">
         <h1 class="heading">Update Ice Cream</h1>
@@ -133,19 +132,16 @@
                     <span>Ice Cream Name To Update</span>
                     <input type="text" name="iceCreamName" placeholder="enter name" />
                 </div>
-    
                 <div class="inputBox">
-                    <span>Update Name</span>
-                    <input type="text" name="iceCreamName" placeholder="enter new name" />
+                    <span>Update -</span>
+                    <select name="updOption" id="UpdateOptions">
+                        <option value="Choose One">Choose One</option>
+                        <option value="flavor">flavor</option>
+                        <option value="quantity">quantity</option>
+                        <option value="price">price</option>
+                    </select>
+                    <input type="text" name="values" placeholder="Enter new value" />
                 </div>
-                <div class="inputBox">
-                    <span>Update Quantity</span>
-                    <input type="text" name="iceCreamName" placeholder="enter new quantity" />
-                </div>
-                <div class="inputBox">
-                    <span>Update Price</span>
-                    <input type="text" name="iceCreamName" placeholder="enter new price" />
-                </div>    
             </form>
             <input type="submit" value="Update" class="btn"/>        
     </section>

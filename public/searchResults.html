@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ice Creams Admin Page</title>
+    <!-- font awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+        table, th, td {
+          border:1px solid black;
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: large;
+        }
+    </style>
+        
+
+    <!-- swiper -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
+    />
+    <!-- lightgallery -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/css/lightgallery.min.css"
+    />
+    <!-- custom css -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="/js/script.js"></script>
+</head>
+<body>
+    <section class="header">
+        <a href="#" class="logo">
+            <i class="fas fa-ice-cream"></i> Gelato de creme
+        </a>
+
+        <nav class="navbar">
+            <a href="/adminMenu">Menu</a>
+            <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
+        </nav>
+
+        <div id="menu-btn" class="fas fa-bars"></div>
+    </section>
+    <section>
+        <br>
+        <button onclick="searchIceCreamsList2()" id="click">Click Me To Show Results</button>
+        <br>
+        <div id="iceCreams2" class="box-container" style="visibility: hidden; text-align: center;">
+            <br>
+            <table id="iceCreamsTable2" style="width:100%">
+                <tr>
+                    <th>Name</th>
+                    <th>Flavor</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+              </table>
+            </div>
+    </div>                        
+</div>
+    </section>
+</body>
+</html>

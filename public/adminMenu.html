@@ -41,15 +41,16 @@
         </a>
 
         <nav class="navbar">
-            <a href="/adminIceCreamsMenu.html">Ice Creams Menu</a>
+            <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
         <h1>Admin Options</h1>
-        <button onclick="showData()">Users List</button>
-        <div id="users" style="visibility: hidden;">
+        <button id="btnShow" onclick="showData()">Users List</button>
+        <div id="users" style="visibility: hidden;text-align: center;">
+        <br>
         <table id="userstable" style="width:100%">
             <tr>
               <th>Full Name</th>
@@ -59,6 +60,7 @@
           </table>
         </div>
         <form action="/logout" method="POST">
+            <br>
             <button>Logout</button>
         </form>
     </section>

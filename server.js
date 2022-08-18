@@ -12,6 +12,7 @@ const User = require("./models/User");
 const IceCream = require("./models/IceCream");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
+const isGuest = require('./middleware/is-guest');
 const PORT = 8081;
 
 connectDB();
@@ -35,11 +36,11 @@ app.use(
   );
 //routes
 
-app.get("/", function(req,res){
+app.get("/", isGuest, function(req,res){
     res.sendFile(__dirname + "/public/index.html");
 });
 
-app.get("/signup",function(req,res){
+app.get("/signup",isGuest,function(req,res){
     res.sendFile(__dirname + "/public/signup.html");
 });
 
@@ -85,9 +86,9 @@ app.post('/addIceCream', async (req,res) =>{
         price
     });
     await iceCream.save();
-    res.redirect("/adminMenu");
+    res.redirect("/adminMenu/iceCreams");
 }); 
-app.get("/showIceCreamsList",async(req,res)=>{
+app.get("/adminMenu/showIceCreamsList",async(req,res)=>{
     const all = await IceCream.find({});
     res.json(all);
 })
@@ -97,8 +98,37 @@ app.post("/deleteIceCream",async(req,res)=>{
     res.redirect("/adminMenu/iceCreams")
 })
 
+app.post("/updateIceCream",async(req,res)=>{
+    const option = req.body.updOption.toLowerCase();
+    const optionToString = option.toString();
+    const filter = {"name": req.body.iceCreamName};
+    let quantity = "";
+    let price = "";
+    let update = null;
+    if (option === "quantity"){
+        quantity = option;
+        update = {$set:{quantity: req.body.values}};
+    }
+    if (option === "price"){
+        price = option;
+        update = {$set:{price: req.body.values}};
+    }
+    await IceCream.findOneAndUpdate(filter, update, {new: true}, (err, doc) => {
+        if (err) {
+            console.log("Something wrong when updating data!");
+        }
+        console.log(doc);
+        res.redirect("/adminMenu/iceCreams");
+    });
+});
+
+
 app.get("/loginReminder",function(req,res){
     res.sendFile(__dirname+ "/public/loginReminder.html");
+});
+
+app.get("/guestReminder",isAuth,function(req,res){
+    res.sendFile(__dirname+ "/public/guestReminder.html");
 });
 
 app.get("/adminMenu",isAdmin,function(req,res){
@@ -109,7 +139,7 @@ app.get("/adminReminder",function(req,res){
     res.sendFile(__dirname   + "/public/adminReminder.html");
 })
 
-app.get("/signin",function(req,res){
+app.get("/signin",isGuest,function(req,res){
     res.sendFile(__dirname + "/public/signIn.html");
 });
 app.get("/showData",async(req,res)=>{
@@ -136,7 +166,7 @@ app.post("/signin",async (req,res)=>{
         req.session.isAdmin = true;
         res.redirect("/adminMenu");
     }else{
-        res.redirect("/");
+        res.redirect("/reservationSelect");
     }
 });
 
@@ -159,5 +189,10 @@ app.post("/logout", (req,res)=>{
 app.get("/adminMenu/iceCreams",isAdmin,function(req,res){
     res.sendFile(__dirname + "/public/adminIceCreamsMenu.html");
 });
-
+app.get("/searchResults",function(req,res){
+    res.sendFile(__dirname + "/public/searchResults.html");
+})
+app.get("/reservationSelect",isAuth,function(req,res){
+    res.sendFile(__dirname + "/public/userMenu.html");
+});
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
