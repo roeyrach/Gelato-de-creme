@@ -60,8 +60,11 @@ function showData(){
 	});
 }
 function showIceCreamsList(){
+	event.preventDefault();
 	$("#iceCreams").css('visibility','visible');
 	$("#toMyCart").css('visibility','visible');
+	$("#spName").css('visibility','visible');
+	$("#nameinp").css('visibility','visible');
 	$.get('/adminMenu/showIceCreamsList',function(data,status){
 		for (let i=0; i< data.length; i++){
 			var row = "<tr>"
@@ -69,13 +72,24 @@ function showIceCreamsList(){
 						+"<td>" + data[i].flavor + "</td>"
 						+"<td>" + data[i].quantity + "</td>"
 						+"<td>" + data[i].price +"</td>"
-						+"<td><input type='checkbox' id=+''" + i + "''" +  "</input>"
 						+
 					"</tr>";
 			$("#iceCreamsTable").append(row);
 		}
 		console.log(row);
 	});
+}
+function selectedIceCreamsDisplay(){
+	$("#btnSec2").css('visibility','hidden');
+	$("#btnFinishOrder").css('visibility','visible');
+	let arr = $.get("/selectedIceCreams",function(data,status){
+		for (let i =0; i<data.length; i++){
+			const str = data[i].split("_");
+			const name = str[0];
+			const quantity = str[1];
+			$("#sec2").append("<br><div class='card'><img src='https://avirtualvegan.com/wp-content/uploads/2015/05/DSC_0209.jpg' alt='Avatar' style='width:30%';><div class='container'><h1><b>" + name +"</b></h1><p>" + quantity + " kilos" + "</p></div></div><br>");
+		}
+	})
 }
 function searchIceCreamsList1(){
 	$("#iceCreams1").css('visibility','visible');

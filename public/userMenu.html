@@ -41,22 +41,20 @@
         </a>
 
         <nav class="navbar">
-            <form action="/logout" method="POST">
-                <button>Logout</button>
-            </form>
+            <a href="/logout">Log-Out</a>
             <a href="/menu">Menu</a>
             <a href="/cart">Cart</a>
-            
+        
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
-        <section>
+        <section class="order" id="order">
             <h1 class="heading">Reservation Start Here  </h1>
-            <h1 style="font-size:xx-large;">Select Ice Cream</h1>
-            <button onclick="showIceCreamsList()">Ice-Creams List</button>
-            <form action="/cart" method="get">
+            <form action="/resSelect" method="post">
+                <h1 style="font-size:xx-large;">Select Ice Cream</h1>
+                <button onclick="showIceCreamsList()">Ice-Creams List</button>
                 <div id="iceCreams" class="box-container" style="visibility: hidden;">
                     <br>
                     <table id="iceCreamsTable" style="width:100%; text-align: center;" >
@@ -65,12 +63,19 @@
                             <th>Flavor</th>
                             <th>Quantity Available To Order In KG</th>
                             <th>Price Per KG in NIS</th>
-                            <th>Add To Cart</th>
                         </tr>
                     </table>
                 </div>
                 <br>
-                <button onclick="tothenext()" id="toMyCart" style="visibility: hidden;">Continue To My Cart</button>
+                <div class="box-container">
+                    <div class="box">    
+                        <div class="inputBox">
+                            <span style="visibility: hidden;" id="spName">Select Name To Add And Quantity Separated By _</span>
+                            <input id="nameinp" type="text" style="visibility: hidden;" name="inname"  placeholder="enter name" />
+                        </div>
+                    </div>
+                </div>
+                <button onclick="tothenext()" id="toMyCart" style="visibility: hidden; text-align: center;">Add to Cart</button>
         </form>
         </section>
         

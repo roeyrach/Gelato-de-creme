@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoclient = require('mongodb');
 const mongoose = require("mongoose");
+const multer = require("multer");
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const session = require('express-session')
@@ -10,6 +11,7 @@ const connectDB = require("./config/db");
 const mongoURI = config.get("mongoURI");
 const User = require("./models/User");
 const IceCream = require("./models/IceCream");
+const Reservation = require("./models/Reservation");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const isGuest = require('./middleware/is-guest');
@@ -158,6 +160,7 @@ app.post("/signin",async (req,res)=>{
         console.log("Wrong password...");
         return res.redirect("/signin");
     }
+    req.session.selected = "nothing yet";
     req.session.isAuth = true;
     req.session.fullname = user.fullname;
     req.session.email = user.email;
@@ -170,22 +173,37 @@ app.post("/signin",async (req,res)=>{
     }
 });
 
+app.post("/resSelect",async(req,res)=>{
+    const name = req.body.inname;
+    req.session.reload(function(err){
+        if (err) throw err;
+        else{
+            if (req.session.selected === "nothing yet"){
+                req.session.selected = name;
+            }else{
+                const str = req.session.selected + "," + name;
+                req.session.selected = str;
+            }
+            req.session.save();
+        }
+    });
+    res.redirect("/cart");
+});
+
 app.get("/cart",isAuth, (req,res)=>{
     res.sendFile(__dirname + "/public/cart.html");
 });
-app.get("/cartSessionParams",function (req,res){
-    const fullname = req.session.fullname;
-    const pass = req.session.password;
-    res.json({fullname:fullname});
-});
 
-app.post("/logout", (req,res)=>{
+app.get("/logout", (req,res)=>{
     req.session.destroy((err)=>{
         if (err) throw err;
         res.redirect("/");
     });
 });
-
+app.get("/selectedIceCreams",(req,res)=>{
+    let arr = req.session.selected.split(",");
+    res.send(arr);
+})
 app.get("/adminMenu/iceCreams",isAdmin,function(req,res){
     res.sendFile(__dirname + "/public/adminIceCreamsMenu.html");
 });
@@ -194,5 +212,85 @@ app.get("/searchResults",function(req,res){
 })
 app.get("/reservationSelect",isAuth,function(req,res){
     res.sendFile(__dirname + "/public/userMenu.html");
+});
+
+app.get("/cancelOrder",(req,res)=>{
+    req.session.reload(function(err){
+        if (err) throw err;
+        else{
+            req.session.selected = "nothing yet";
+        }
+            req.session.save();
+    });
+    res.redirect("/reservationSelect");
+});
+
+app.post("/finishOrder",async(req,res)=>{
+    let count =0;
+    let sum = 0;
+    const selectedArr = req.session.selected.split(",");
+    for (let i =0; i<selectedArr.length; i++){
+        const str = selectedArr[i].split("_");
+        const name = str[0];
+        const quantity = str[1];
+        const filter = {"name": name};
+        const iceCream = await IceCream.findOne(filter);
+        if (iceCream != null){
+            const newQuantity = iceCream.quantity - quantity;
+            console.log(newQuantity);
+            if (newQuantity > 0){
+                await IceCream.findOneAndUpdate(filter,{$set:{"quantity":newQuantity}},{new:true},(err,doc)=>{
+                    req.session.reload(function(err){
+                        if (err) throw err;
+                        else{
+                            req.session.selected = "nothing yet";
+                            req.session.save();
+                        }
+                    });
+                });
+                count++;
+            }
+        }else{
+            break;
+        }
+    }
+    if (count === selectedArr.length){
+        const orderNumber = Math.random();
+        const email = req.session.email;
+        const date = new Date().toISOString().slice(0, 10);
+        const price = 0;
+        const content = req.session.selected;
+        let reservation = await Reservation.findOne({ orderNumber });
+        if (reservation){
+            alert("Reservation already exists...");
+            return res.redirect("/reservationSelect");    
+        }
+        reservation = new Reservation({
+            orderNumber,
+            email,
+            date,
+            price,
+            content
+        });
+        await reservation.save();
+        res.redirect("/reservationSelect");
+    }else{
+        req.session.reload(function(err){
+            if (err) throw err;
+            else{
+                req.session.selected = "nothing yet";
+                req.session.save();
+            }
+        });
+        res.redirect("/wrongQuantity");
+    }
+
+});
+app.get("/wrongQuantity",function(req,res){
+    res.sendFile(__dirname + "/public/wrongQuantity.html");
+});
+
+app.get("/adminMenu/Stats",function(req,res){
+    res.sendFile(__dirname + "/public/statsAdmin.html");
 });
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
