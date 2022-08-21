@@ -42,14 +42,13 @@
 
         <nav class="navbar">
             <a href="/adminMenu">Menu</a>
-            <a href="/adminMenu/Stats">Ice Creams Menu</a>
+            <a href="/adminMenu/Stats">Stats Menu</a>
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
-        <h1 class="heading">Admin Options</h1>
-        <button onclick="searchIceCreamsList1()">Ice-Creams List</button>
+        <h1 onclick="searchIceCreamsList1()" class="heading">Ice Creams List</h1>
         <div id="iceCreams1" class="box-container" style="visibility: hidden;">
             <table id="iceCreamsTable1" style="width:100%; text-align: center;" >
                 <tr>
@@ -57,6 +56,7 @@
                     <th>Flavor</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <td>photo</td>
                 </tr>
               </table>
             </div>
@@ -83,6 +83,10 @@
                     <div class="inputBox">
                         <span>Price In Dollars Per KG</span>
                         <input type="number" id="price" name="price" placeholder="enter price" />
+                    </div>
+                    <div class="inputBox">
+                        <span>Photo URL</span>
+                        <input type="text" id="photourl" name="photoURL" placeholder="enter photo url" />
                     </div>
                 </div>
             </div>
@@ -137,9 +141,9 @@
                     <span>Update -</span>
                     <select name="updOption" id="UpdateOptions">
                         <option value="Choose One">Choose One</option>
-                        <option value="flavor">flavor</option>
                         <option value="quantity">quantity</option>
                         <option value="price">price</option>
+                        <option value="url">url</option>
                     </select>
                     <input type="text" name="values" placeholder="Enter new value" />
                 </div>

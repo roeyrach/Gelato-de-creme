@@ -53,8 +53,7 @@
         <section class="order" id="order">
             <h1 class="heading">Reservation Start Here  </h1>
             <form action="/resSelect" method="post">
-                <h1 style="font-size:xx-large;">Select Ice Cream</h1>
-                <button onclick="showIceCreamsList()">Ice-Creams List</button>
+                <h1 onclick="showIceCreamsList()" style="font-size:xx-large;">Select Ice Cream</h1>
                 <div id="iceCreams" class="box-container" style="visibility: hidden;">
                     <br>
                     <table id="iceCreamsTable" style="width:100%; text-align: center;" >
@@ -63,6 +62,7 @@
                             <th>Flavor</th>
                             <th>Quantity Available To Order In KG</th>
                             <th>Price Per KG in NIS</th>
+                            <th>Photo</th>
                         </tr>
                     </table>
                 </div>

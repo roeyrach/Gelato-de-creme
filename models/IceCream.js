@@ -18,6 +18,10 @@ const iceCreamSchema = new Schema({
   price: {
     type:Number,
     required:false,
+  },
+  photoURL: {
+    type: String,
+    required:false,
   }
 });
 

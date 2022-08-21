@@ -74,6 +74,7 @@ app.post('/addIceCream', async (req,res) =>{
     const flavor = req.body.flavor;
     const quantity = req.body.quantity;
     const price = req.body.price;
+    const photoURL = req.body.photoURL;
 
     let iceCream = await IceCream.findOne({ name });
     if (iceCream){
@@ -85,8 +86,10 @@ app.post('/addIceCream', async (req,res) =>{
         name,
         flavor,
         quantity,
-        price
+        price,
+        photoURL,
     });
+    console.log("iceCream.photoURL = " + iceCream.photoURL);
     await iceCream.save();
     res.redirect("/adminMenu/iceCreams");
 }); 
@@ -106,6 +109,7 @@ app.post("/updateIceCream",async(req,res)=>{
     const filter = {"name": req.body.iceCreamName};
     let quantity = "";
     let price = "";
+    let photoURL = "";
     let update = null;
     if (option === "quantity"){
         quantity = option;
@@ -114,6 +118,10 @@ app.post("/updateIceCream",async(req,res)=>{
     if (option === "price"){
         price = option;
         update = {$set:{price: req.body.values}};
+    }
+    if (option === "url"){
+        photoURL = option;
+        update = {$set:{photoURL: req.body.values}};
     }
     await IceCream.findOneAndUpdate(filter, update, {new: true}, (err, doc) => {
         if (err) {
@@ -293,4 +301,10 @@ app.get("/wrongQuantity",function(req,res){
 app.get("/adminMenu/Stats",function(req,res){
     res.sendFile(__dirname + "/public/statsAdmin.html");
 });
+
+app.get("/adminMenu/showReservations",async(req,res)=>{
+    const all = await Reservation.find({});
+    res.json(all);
+})
+
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
