@@ -12,36 +12,6 @@ window.onscroll = () => {
 	navbar.classList.remove("active")
 }
 
-// var swiper = new Swiper(".home-slider", {
-// 	grabCursor: true,
-// 	loop: true,
-// 	centeredSlides: true,
-// 	navigation: {
-// 		nextEl: ".swiper-button-next",
-// 		prevEl: ".swiper-button-prev",
-// 	},
-// })
-
-// var swiper = new Swiper(".reviews-slider", {
-// 	pagination: {
-// 		el: ".swiper-pagination",
-// 		clickable: true,
-// 	},
-// 	grabCursor: true,
-// 	loop: true,
-// 	spaceBetween: 20,
-// 	breakpoints: {
-// 		0: {
-// 			slidesPerView: 1,
-// 		},
-// 		768: {
-// 			slidesPerView: 2,
-// 		},
-// 		991: {
-// 			slidesPerView: 3,
-// 		},
-// 	},
-// })
 function check(){
 	$.get('cartSessionParams',function(data,status){
 		$.each(data, function(key,val) {
@@ -50,6 +20,9 @@ function check(){
 		}
 		)});
 }
+
+/* Share Links */
+
 /*
 Whatsapp:
 https://api.whatsapp.com/send?text=[post-title] [post-url]
@@ -69,13 +42,13 @@ function shareLink() {
 	let postTitle = encodeURI("Hey, Check out this awesome new ice-cream shop: ");
 
 	facebookBtn.setAttribute("href",
-	'https://www.facebook.com/sharer.php?u='+encodeURI(postUrl))
+	'https://www.facebook.com/sharer.php?u='+postUrl)
 
 	twitterBtn.setAttribute("href",
 	'https://twitter.com/share?url='+postUrl+'&text='+postTitle)
 
 	whatsappBtn.setAttribute("href",
-	'https://api.whatsapp.com/send?text='+postTitle+' '+postUrl)
+	'https://api.whatsapp.com/send?text='+postTitle+''+postUrl)
 }
 
 shareLink();
