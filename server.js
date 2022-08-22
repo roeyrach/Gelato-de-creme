@@ -15,6 +15,7 @@ const Reservation = require("./models/Reservation");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const isGuest = require('./middleware/is-guest');
+const { event } = require('jquery');
 const PORT = 8081;
 
 connectDB();
@@ -53,20 +54,23 @@ app.post('/signup', async (req,res) =>{
 
     let user = await User.findOne({ email });
     if (user){
-        alert("User already exists...");
         return res.redirect("/signup");    
     }
 
     const hasdPsw = await bcrypt.hash(password, 12);
-
+    if (fullname.includes(" ") && email.includes("@") && email.includes(".") && password.length >= 6){
     user = new User({
         fullname,
         email,
         password: hasdPsw,
         admin:false,
+
     });
-    await user.save();
-    res.redirect("/signin");
+        await user.save();
+        res.redirect("/signin");
+    }else{
+		//res.redirect("/signup");
+    }
 }); 
 
 app.post('/addIceCream', async (req,res) =>{
@@ -287,7 +291,6 @@ app.post("/finishOrder",async(req,res)=>{
         const arr = content.split(",");
         let reservation = await Reservation.findOne({ orderNumber });
         if (reservation){
-            alert("Reservation already exists...");
             return res.redirect("/userMenu");    
         }
         reservation = new Reservation({
@@ -303,6 +306,22 @@ app.post("/finishOrder",async(req,res)=>{
             const count = ice.countOrdered;
             await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": count+1 }},{new:true},(err,doc)=>{
             });
+            await User.findOne({"email":req.session.email},function(err,doc){
+                if (doc.listOfOrders.get(name[0]) != undefined){
+                    const str = doc.listOfOrders.get(name[0]);
+                    const num = parseInt(str);
+                    const newNum = num+1;
+                    doc.listOfOrders.set(name[0],newNum);
+                    doc.save(function(err){
+                        if (err) throw err;
+                    });
+                }else{
+                    doc.listOfOrders.set(name[0],1);
+                    doc.save(function(err){
+                        if (err) throw err;
+                    })
+                }
+            })
         }
         await reservation.save();
         res.redirect("/userMenu");
@@ -318,6 +337,29 @@ app.post("/finishOrder",async(req,res)=>{
     }
 
 });
+
+app.get("/recommendedIceCream",async(req,res)=>{
+    let max = 0;
+    let recName = "";
+    const user = await User.findOne({"email":req.session.email});
+    const arr = user.listOfOrders;
+    let keys = Array.from(arr.keys());
+    for (let i =0; i < keys.length; i++){
+        const iceCreamName = keys[i];
+        const str = user.listOfOrders.get(iceCreamName);
+        const num = parseInt(str);
+        if (num > max){
+            max = num;
+            recName = iceCreamName;
+        }
+    }
+    const icecream = await IceCream.findOne({"name":recName});
+    res.json({
+        "recName" : recName,
+        "flavor" : icecream.flavor,
+    })
+})
+
 app.get("/wrongQuantity",function(req,res){
     res.sendFile(__dirname + "/public/wrongQuantity.html");
 });

@@ -41,23 +41,65 @@ var swiper = new Swiper(".reviews-slider", {
 		},
 	},
 })
-function check(){
-	$.get('cartSessionParams',function(data,status){
-		$.each(data, function(key,val) {
-			console.log(data);
-			$("#text1").text("Hello " + data[key]);
-		}
-		)});
+
+function recommend(){
+	$.get('/recommendedIceCream',function(data,status){
+		$("#toShowHistroy").css('visibility','hidden');
+		$("#historyFlavor").text("Flavor - " + data.flavor); 
+		$("#historyName").text("Or More Specific - " + data.recName);
+	})
 }
+
+function checkSignUp(){
+	const fullname = $("#signUpFullName").val();
+	const email = $("#signUpEmail").val();
+	const password = $("#passwordSignUp").val();
+	let count =0;
+
+	if (!fullname.includes(" ")){
+		$("#fullnameError").css('visibility','visible');
+		$("#fullnameError").text("Full-Name Must Be Two Words!");
+		count++;
+	}
+	if (!(email.includes("@") && email.includes("."))){
+		$("#wrongEmail").css('visibility','visible');
+		$("#wrongEmail").text("Email Must Contains @ and . OR Email Already USED");
+		count++;
+	}
+	if (password.length < 6){
+		$("#wrongPassword").css('visibility','visible');
+		$("#wrongPassword").text("Password Must Contains At Least 6 Characters!");
+		count++;
+	}
+	if (count != 0){
+		$("#PressAgain").css('visibility','visible');
+		$("#PressAgain").text("Refresh The Page And Sign Up Again!");
+	}
+}
+
 function showData(){
 	$("#users").css('visibility','visible');
 	$("#btnShow").css('visibility','hidden');
 	$.get('showData',function(data,status){
 		for (let i=0; i< data.length; i++){
-			var row = "<tr><td>" + data[i].fullname + "</td><td>" + data[i].email + "</td><td>" + data[i].admin + "</td></tr>";
-			$("#userstable").append(row);
-		}
-	});
+			if (data[i].admin === true){
+				var row = "<tr>"
+				+"<td style='color:blue'>" + data[i].fullname + "</td>"
+				+"<td style='color:blue'>" + data[i].email + "</td>"
+				+"<td style='color:blue'>" + data[i].admin + "</td>"
+				+"</tr>";
+				$("#userstable").append(row);
+			}
+			else {
+					var row = "<tr>"
+					+"<td>" + data[i].fullname + "</td>"
+					+"<td>" + data[i].email + "</td>"
+					+"<td>" + data[i].admin + "</td>"
+					+"</tr>";
+					$("#userstable").append(row);
+				}
+			}
+		});
 }
 function showIceCreamsList(){
 	event.preventDefault();

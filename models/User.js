@@ -18,6 +18,11 @@ const userSchema = new Schema({
   admin: {
     type:Boolean,
     required:false,
+  },
+  listOfOrders:{
+    type: Map,
+    of:String,
+    default: {}
   }
 });
 
