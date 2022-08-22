@@ -41,43 +41,50 @@
         </a>
 
         <nav class="navbar">
-            <a href="/logout">Log-Out</a>
-            <a href="/menu">Menu</a>
+            <a href="/profile">Profile</a>
             <a href="/cart">Cart</a>
+            <a href="/logout">Log-Out</a>
         
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
-        <section class="order" id="order">
-            <h1 class="heading">Reservation Start Here  </h1>
-            <form action="/resSelect" method="post">
-                <h1 onclick="showIceCreamsList()" style="font-size:xx-large;">Select Ice Cream</h1>
-                <div id="iceCreams" class="box-container" style="visibility: hidden;">
-                    <br>
-                    <table id="iceCreamsTable" style="width:100%; text-align: center;" >
-                        <tr>
-                            <th>Name</th>
-                            <th>Flavor</th>
-                            <th>Quantity Available To Order In KG</th>
-                            <th>Price Per KG in NIS</th>
-                            <th>Photo</th>
-                        </tr>
-                    </table>
-                </div>
-                <br>
+        <section id="order" class="order">
+            <h1 class="heading">Search</h1>
+            <form action="/reservationSelect" method="get">
                 <div class="box-container">
-                    <div class="box">    
+                    <div class="box">
                         <div class="inputBox">
-                            <span style="visibility: hidden;" id="spName">Select Name To Add And Quantity Separated By _</span>
-                            <input id="nameinp" type="text" style="visibility: hidden;" name="inname"  placeholder="enter name" />
+                            <span>Filter By -</span>
+                                <select name="options" id="options">
+                                <option value="All">All</option>
+                                <option value="Most Purchased ">Most Wanted</option>
+                                <option value="Max Price">Max Price</option>
+                                <option value="Min Price">Min Price</option>
+                              </select>
                         </div>
-                    </div>
+                        <br>
+                        <div class="inputBox">
+                            <span>Search By Specific Name</span>
+                            <input type="text" id="spetext" name="name" placeholder="enter name" />
+                        </div>
+                    
+                        <div class="inputBox">
+                            <span>Search By Specific Flavor</span>
+                            <input type="text" name="flavor" placeholder="enter flavor" />
+                        </div>
+                        <div class="inputBox">
+                            <span>Search By Specific Quantity</span>
+                            <input type="number" name="quantity" placeholder="enter quantity" />
+                        </div>
+                        <div class="inputBox">
+                            <span>Search By Specific Price</span>
+                            <input type="password" id="price1" name="price" placeholder="enter price" />
+                        </div>
+                <input type="submit" value="Search"  class="btn"/>
                 </div>
-                <button onclick="tothenext()" id="toMyCart" style="visibility: hidden; text-align: center;">Add to Cart</button>
-        </form>
-        </section>
-        
+                </form>
+        </section> 
 </body>
 </html>

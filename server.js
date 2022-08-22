@@ -75,6 +75,7 @@ app.post('/addIceCream', async (req,res) =>{
     const quantity = req.body.quantity;
     const price = req.body.price;
     const photoURL = req.body.photoURL;
+    const countOrdered = 0;
 
     let iceCream = await IceCream.findOne({ name });
     if (iceCream){
@@ -88,8 +89,8 @@ app.post('/addIceCream', async (req,res) =>{
         quantity,
         price,
         photoURL,
+        countOrdered,
     });
-    console.log("iceCream.photoURL = " + iceCream.photoURL);
     await iceCream.save();
     res.redirect("/adminMenu/iceCreams");
 }); 
@@ -97,6 +98,19 @@ app.get("/adminMenu/showIceCreamsList",async(req,res)=>{
     const all = await IceCream.find({});
     res.json(all);
 })
+
+app.get("/adminMenu/showMostWantedIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({countOrdered:-1});
+    res.json(all);
+});
+app.get("/adminMenu/showMaxPriceIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({price:-1});
+    res.json(all);
+});
+app.get("/adminMenu/showMinPriceIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({price:1});
+    res.json(all);
+});
 
 app.post("/deleteIceCream",async(req,res)=>{
     await IceCream.findOneAndDelete({"name": req.body.iceCreamName});
@@ -127,7 +141,6 @@ app.post("/updateIceCream",async(req,res)=>{
         if (err) {
             console.log("Something wrong when updating data!");
         }
-        console.log(doc);
         res.redirect("/adminMenu/iceCreams");
     });
 });
@@ -177,7 +190,7 @@ app.post("/signin",async (req,res)=>{
         req.session.isAdmin = true;
         res.redirect("/adminMenu");
     }else{
-        res.redirect("/reservationSelect");
+        res.redirect("/userMenu");
     }
 });
 
@@ -219,6 +232,10 @@ app.get("/searchResults",function(req,res){
     res.sendFile(__dirname + "/public/searchResults.html");
 })
 app.get("/reservationSelect",isAuth,function(req,res){
+    res.sendFile(__dirname + "/public/reservationSelect.html");
+});
+
+app.get("/userMenu",isAuth,(req,res)=>{
     res.sendFile(__dirname + "/public/userMenu.html");
 });
 
@@ -230,7 +247,7 @@ app.get("/cancelOrder",(req,res)=>{
         }
             req.session.save();
     });
-    res.redirect("/reservationSelect");
+    res.redirect("/userMenu");
 });
 
 app.post("/finishOrder",async(req,res)=>{
@@ -245,7 +262,6 @@ app.post("/finishOrder",async(req,res)=>{
         const iceCream = await IceCream.findOne(filter);
         if (iceCream != null){
             const newQuantity = iceCream.quantity - quantity;
-            console.log(newQuantity);
             if (newQuantity > 0){
                 await IceCream.findOneAndUpdate(filter,{$set:{"quantity":newQuantity}},{new:true},(err,doc)=>{
                     req.session.reload(function(err){
@@ -268,10 +284,11 @@ app.post("/finishOrder",async(req,res)=>{
         const date = new Date().toISOString().slice(0, 10);
         const price = 0;
         const content = req.session.selected;
+        const arr = content.split(",");
         let reservation = await Reservation.findOne({ orderNumber });
         if (reservation){
             alert("Reservation already exists...");
-            return res.redirect("/reservationSelect");    
+            return res.redirect("/userMenu");    
         }
         reservation = new Reservation({
             orderNumber,
@@ -280,8 +297,15 @@ app.post("/finishOrder",async(req,res)=>{
             price,
             content
         });
+        for (let i =0; i<arr.length; i++){
+            const name = arr[i].split("_"); 
+            const ice = await IceCream.findOne({"name":name});
+            const count = ice.countOrdered;
+            await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": count+1 }},{new:true},(err,doc)=>{
+            });
+        }
         await reservation.save();
-        res.redirect("/reservationSelect");
+        res.redirect("/userMenu");
     }else{
         req.session.reload(function(err){
             if (err) throw err;

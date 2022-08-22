@@ -43,6 +43,7 @@
         <nav class="navbar">
             <a href="/adminMenu">Menu</a>
             <a href="/adminMenu/Stats">Stats Menu</a>
+            <a href="/logout">Log-Out</a>
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
@@ -57,6 +58,7 @@
                     <th>Quantity</th>
                     <th>Price</th>
                     <td>photo</td>
+                    <td>Times Ordered</td>
                 </tr>
               </table>
             </div>
@@ -101,6 +103,7 @@
                     <div class="inputBox">
                         <span>Filter By -</span>
                             <select name="options" id="options">
+                            <option value="All">All</option>
                             <option value="Most Purchased ">Most Wanted</option>
                             <option value="Max Price">Max Price</option>
                             <option value="Min Price">Min Price</option>
@@ -109,7 +112,7 @@
                     <br>
                     <div class="inputBox">
                         <span>Search By Specific Name</span>
-                        <input type="text" id="spetext" name="iceCreamName" placeholder="enter name" />
+                        <input type="text" id="spetext" name="name" placeholder="enter name" />
                     </div>
                 
                     <div class="inputBox">
@@ -122,7 +125,7 @@
                     </div>
                     <div class="inputBox">
                         <span>Search By Specific Price</span>
-                        <input type="password" id="price1" name="price" placeholder="enter price" />
+                        <input type="number" id="price1" name="price" placeholder="enter price" />
                     </div>
             <input type="submit" value="Search"  class="btn"/>
             </div>

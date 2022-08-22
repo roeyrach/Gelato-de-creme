@@ -72,7 +72,8 @@ function showIceCreamsList(){
 						+"<td>" + data[i].flavor + "</td>"
 						+"<td>" + data[i].quantity + "</td>"
 						+"<td>" + data[i].price +"$</td>"
-						+"<td><img style='width:130px'; src='" + data[i].photoURL + "'></td>"+
+						+"<td><img style='width:130px'; src='" + data[i].photoURL + "'></td>"
+						+"<td>" + data[i].countOrdered + "</td>" +
 						"</tr>";
 			$("#iceCreamsTable").append(row);
 		}
@@ -100,47 +101,175 @@ function searchIceCreamsList1(){
 					+"<td>" + data[i].flavor + "</td>"
 					+"<td>" + data[i].quantity + "</td>"
 					+"<td>" + data[i].price +"$</td>"
-					+"<td><img style='width:130px'; src='" + data[i].photoURL + "'></td>"+
-				"</tr>";
-		$("#iceCreamsTable1").append(row);
-		//console.log(row);
+					+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+					+"<td>" + data[i].countOrdered + "</td>" +
+					"</tr>";
+			$("#iceCreamsTable1").append(row);
 		}
 	});
 }
 
 // 
+
+
 function searchIceCreamsList2(){
 	$("#iceCreams2").css('visibility','visible');
+	$("#text1").css('visibility','visible');
 	$.get('/adminMenu/showIceCreamsList',function(data,status){
 		let count = 0;
+		let index = 0;
 		str = window.location.search;
 		if (typeof str === 'string'){
-			var params = str.split("&");
-			var iceCreamNameParams = params[1];
-			var iceCreamNameSplit = iceCreamNameParams.split("=");
-			var iceCreamName = iceCreamNameSplit[1];
-			for (let i=0; i< data.length; i++){
-				if (data[i].name === iceCreamName){
-					var row = "<tr>"
-					+"<td>" + data[i].name + "</td>"
-					+"<td>" + data[i].flavor + "</td>"
-					+"<td>" + data[i].quantity + "</td>"
-					+"<td>" + data[i].price +"</td>" +
-					"</tr>";
-					$("#iceCreamsTable2").append(row);
-					count++;
-					//console.log(row);	
-				}		
+			var firstSplit = str.toString().split("?");
+			var params = firstSplit.toString().split("&");
+			for (let i=0; i<params.length; i++){
+				var arr = params[i].toString().split("=");
+				var result = arr[1];
+				if (result != "")
+					index = i;
 			}
-			if (count === 0){
-				var row = "<tr><td>Couldn't find anything</td></tr>"
-				$("#iceCreamsTable2").append(row);
+			 if (index === 0){
+				var arr = params[0].toString().split("=");
+				var value = arr[1];
+				if (value === "All"){
+					$("#SearchParam").text("All Ice Creams");
+					for (let i=0; i<data.length; i++){
+						var row = "<tr>"
+						+"<td>" + data[i].name + "</td>"
+						+"<td>" + data[i].flavor + "</td>"
+						+"<td>" + data[i].quantity + "</td>"
+						+"<td>" + data[i].price +"$</td>"
+						+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+						+"<td>" + data[i].countOrdered + "</td>" +
+						"</tr>";
+						$("#iceCreamsTable2").append(row);
+					}
+				}
+				if (value === "Most+Purchased+"){
+					$("#SearchParam").text("Sort By Most Purchased");
+					$.get('/adminMenu/showMostWantedIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}
+				if (value === "Max+Price"){
+					$("#SearchParam").text("Sort By Max Price");
+					$.get('/adminMenu/showMaxPriceIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}
+				if (value === "Min+Price"){
+					$("#SearchParam").text("Sort By Min Price");
+					$.get('/adminMenu/showMinPriceIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}	
+			 }
+			 else{
+				var arr = params[index].toString().split("=");
+				var param = arr[0];
+				var result = arr[1];
+				$("#SearchParam").text("Results for Specific " + param);
+				for (let i=0; i< data.length; i++){
+					if (param === "name"){
+						if (data[i].name === result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "flavor"){
+						if (data[i].flavor === result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "quantity"){
+						if (data[i].quantity == result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "price"){
+						if (data[i].price == result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+				}
 
+				if (count === 0){
+					var row = "<tr><td>Couldn't find anything</td></tr>"
+					$("#iceCreamsTable2").append(row);
+				}
 			}
-		}
 		
+		}
 	});
 }
+
+
+
 
 function f(){
 	var data = JSON.parse(localStorage.getItem("result"));

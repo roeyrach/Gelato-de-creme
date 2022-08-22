@@ -22,7 +22,11 @@ const iceCreamSchema = new Schema({
   photoURL: {
     type: String,
     required:false,
-  }
+  },
+  countOrdered:{
+    type:Number,
+    required:false,
+  },
 });
 
 module.exports = mongoose.model("IceCream", iceCreamSchema);
