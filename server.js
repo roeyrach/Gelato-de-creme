@@ -15,15 +15,17 @@ const Reservation = require("./models/Reservation");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const isGuest = require('./middleware/is-guest');
-const { event } = require('jquery');
 const PORT = 8081;
 
+//connect to database
 connectDB();
 
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//store the session in "mySessions" table 
+//----------------------------------------//
 const store = new MongoDBStore({
     uri: mongoURI,
     collection: "mySessions",
@@ -37,16 +39,18 @@ app.use(
       store: store,
     })
   );
-//routes
 
+//routes
+//---------------------------------------//
+//guest's routes
+//---------------------------------------//
 app.get("/", isGuest, function(req,res){
     res.sendFile(__dirname + "/public/index.html");
 });
-
+//----------sign up---------------------//
 app.get("/signup",isGuest,function(req,res){
     res.sendFile(__dirname + "/public/signup.html");
 });
-
 app.post('/signup', async (req,res) =>{
     const fullname = req.body.fullname;
     const email = req.body.email;
@@ -64,7 +68,6 @@ app.post('/signup', async (req,res) =>{
         email,
         password: hasdPsw,
         admin:false,
-
     });
         await user.save();
         res.redirect("/signin");
@@ -72,107 +75,10 @@ app.post('/signup', async (req,res) =>{
 		//res.redirect("/signup");
     }
 }); 
-
-app.post('/addIceCream', async (req,res) =>{
-    const name = req.body.name;
-    const flavor = req.body.flavor;
-    const quantity = req.body.quantity;
-    const price = req.body.price;
-    const photoURL = req.body.photoURL;
-    const countOrdered = 0;
-
-    let iceCream = await IceCream.findOne({ name });
-    if (iceCream){
-        alert("Ice Cream already exists...");
-        return res.redirect("/addIceCream");    
-    }
-
-    iceCream = new IceCream({
-        name,
-        flavor,
-        quantity,
-        price,
-        photoURL,
-        countOrdered,
-    });
-    await iceCream.save();
-    res.redirect("/adminMenu/iceCreams");
-}); 
-app.get("/adminMenu/showIceCreamsList",async(req,res)=>{
-    const all = await IceCream.find({});
-    res.json(all);
-})
-
-app.get("/adminMenu/showMostWantedIceCream",async(req,res)=>{
-    const all = await IceCream.find({}).sort({countOrdered:-1});
-    res.json(all);
-});
-app.get("/adminMenu/showMaxPriceIceCream",async(req,res)=>{
-    const all = await IceCream.find({}).sort({price:-1});
-    res.json(all);
-});
-app.get("/adminMenu/showMinPriceIceCream",async(req,res)=>{
-    const all = await IceCream.find({}).sort({price:1});
-    res.json(all);
-});
-
-app.post("/deleteIceCream",async(req,res)=>{
-    await IceCream.findOneAndDelete({"name": req.body.iceCreamName});
-    res.redirect("/adminMenu/iceCreams")
-})
-
-app.post("/updateIceCream",async(req,res)=>{
-    const option = req.body.updOption.toLowerCase();
-    const optionToString = option.toString();
-    const filter = {"name": req.body.iceCreamName};
-    let quantity = "";
-    let price = "";
-    let photoURL = "";
-    let update = null;
-    if (option === "quantity"){
-        quantity = option;
-        update = {$set:{quantity: req.body.values}};
-    }
-    if (option === "price"){
-        price = option;
-        update = {$set:{price: req.body.values}};
-    }
-    if (option === "url"){
-        photoURL = option;
-        update = {$set:{photoURL: req.body.values}};
-    }
-    await IceCream.findOneAndUpdate(filter, update, {new: true}, (err, doc) => {
-        if (err) {
-            console.log("Something wrong when updating data!");
-        }
-        res.redirect("/adminMenu/iceCreams");
-    });
-});
-
-
-app.get("/loginReminder",function(req,res){
-    res.sendFile(__dirname+ "/public/loginReminder.html");
-});
-
-app.get("/guestReminder",isAuth,function(req,res){
-    res.sendFile(__dirname+ "/public/guestReminder.html");
-});
-
-app.get("/adminMenu",isAdmin,function(req,res){
-    res.sendFile(__dirname + "/public/adminMenu.html");
-})
-
-app.get("/adminReminder",function(req,res){
-    res.sendFile(__dirname   + "/public/adminReminder.html");
-})
-
+//----------sign in---------------------//
 app.get("/signin",isGuest,function(req,res){
     res.sendFile(__dirname + "/public/signIn.html");
 });
-app.get("/showData",async(req,res)=>{
-    const all = await User.find({});
-    res.json(all);
-})
 app.post("/signin",async (req,res)=>{
     const {email,password} = req.body;
     const user = await User.findOne({email});
@@ -197,7 +103,16 @@ app.post("/signin",async (req,res)=>{
         res.redirect("/userMenu");
     }
 });
-
+//user's routes
+//-------reservation--------------------------//
+app.get("/userMenu",isAuth,(req,res)=>{
+    res.sendFile(__dirname + "/public/userMenu.html");
+});
+//-----------search ice cream----------------//
+app.get("/reservationSelect",isAuth,function(req,res){
+    res.sendFile(__dirname + "/public/reservationSelect.html");
+});
+//----------search results and start order---//
 app.post("/resSelect",async(req,res)=>{
     const name = req.body.inname;
     req.session.reload(function(err){
@@ -214,36 +129,12 @@ app.post("/resSelect",async(req,res)=>{
     });
     res.redirect("/cart");
 });
-
+//---------------------selection result in user's cart------------------//
 app.get("/cart",isAuth, (req,res)=>{
     res.sendFile(__dirname + "/public/cart.html");
 });
-
-app.get("/logout", (req,res)=>{
-    req.session.destroy((err)=>{
-        if (err) throw err;
-        res.redirect("/");
-    });
-});
-app.get("/selectedIceCreams",(req,res)=>{
-    let arr = req.session.selected.split(",");
-    res.send(arr);
-})
-app.get("/adminMenu/iceCreams",isAdmin,function(req,res){
-    res.sendFile(__dirname + "/public/adminIceCreamsMenu.html");
-});
-app.get("/searchResults",function(req,res){
-    res.sendFile(__dirname + "/public/searchResults.html");
-})
-app.get("/reservationSelect",isAuth,function(req,res){
-    res.sendFile(__dirname + "/public/reservationSelect.html");
-});
-
-app.get("/userMenu",isAuth,(req,res)=>{
-    res.sendFile(__dirname + "/public/userMenu.html");
-});
-
-app.get("/cancelOrder",(req,res)=>{
+//--------cancel current order and back to search options---//
+app.get("/cancelOrder",isAuth,(req,res)=>{
     req.session.reload(function(err){
         if (err) throw err;
         else{
@@ -253,7 +144,7 @@ app.get("/cancelOrder",(req,res)=>{
     });
     res.redirect("/userMenu");
 });
-
+//---finish the order, add reservation and update ice cream and user----//
 app.post("/finishOrder",async(req,res)=>{
     let count =0;
     let sum = 0;
@@ -337,7 +228,11 @@ app.post("/finishOrder",async(req,res)=>{
     }
 
 });
-
+//-----------------------users profile-----------------------------------//
+app.get("/profile",isAuth,(req,res)=>{
+    res.sendFile(__dirname + "/public/profile.html");
+})
+//--------------------Most Recommended Ice Cream For User from mongodb------//
 app.get("/recommendedIceCream",async(req,res)=>{
     let max = 0;
     let recName = "";
@@ -359,18 +254,137 @@ app.get("/recommendedIceCream",async(req,res)=>{
         "flavor" : icecream.flavor,
     })
 })
-
-app.get("/wrongQuantity",function(req,res){
-    res.sendFile(__dirname + "/public/wrongQuantity.html");
+//--------------------selected ice cream json--------------------------------//
+app.get("/selectedIceCreams",(req,res)=>{
+    let arr = req.session.selected.split(",");
+    res.send(arr);
+})
+///////////////////////////////////////////////////////////////////////////////////////
+//admin's routes
+//------------------------users list-------------------------------//
+app.get("/adminMenu",isAdmin,function(req,res){
+    res.sendFile(__dirname + "/public/adminMenu.html");
+})
+//------------------------ice cream admin's options----------------//
+app.get("/adminMenu/iceCreams",isAdmin,function(req,res){
+    res.sendFile(__dirname + "/public/adminIceCreamsMenu.html");
 });
+//---------------------add ice cream-------------------------------//
+app.post('/addIceCream', async (req,res) =>{
+    const name = req.body.name;
+    const flavor = req.body.flavor;
+    const quantity = req.body.quantity;
+    const price = req.body.price;
+    const photoURL = req.body.photoURL;
+    const countOrdered = 0;
 
+    let iceCream = await IceCream.findOne({ name });
+    if (iceCream){
+        alert("Ice Cream already exists...");
+        return res.redirect("/addIceCream");    
+    }
+
+    iceCream = new IceCream({
+        name,
+        flavor,
+        quantity,
+        price,
+        photoURL,
+        countOrdered,
+    });
+    await iceCream.save();
+    res.redirect("/adminMenu/iceCreams");
+});
+//--------------------------search ice cream results--------------//
+app.get("/searchResults",function(req,res){
+    res.sendFile(__dirname + "/public/searchResults.html");
+});
+//---------------------------update ice cream---------------------//
+app.post("/updateIceCream",async(req,res)=>{
+    const option = req.body.updOption.toLowerCase();
+    const optionToString = option.toString();
+    const filter = {"name": req.body.iceCreamName};
+    let quantity = "";
+    let price = "";
+    let photoURL = "";
+    let update = null;
+    if (option === "quantity"){
+        quantity = option;
+        update = {$set:{quantity: req.body.values}};
+    }
+    if (option === "price"){
+        price = option;
+        update = {$set:{price: req.body.values}};
+    }
+    if (option === "url"){
+        photoURL = option;
+        update = {$set:{photoURL: req.body.values}};
+    }
+    await IceCream.findOneAndUpdate(filter, update, {new: true}, (err, doc) => {
+        if (err) {
+            console.log("Something wrong when updating data!");
+        }
+        res.redirect("/adminMenu/iceCreams");
+    });
+});
+//---------------------------delete ice cream---------------------//
+app.post("/deleteIceCream",async(req,res)=>{
+    await IceCream.findOneAndDelete({"name": req.body.iceCreamName});
+    res.redirect("/adminMenu/iceCreams")
+})
+//-----------------------------stats admin's menu----------------//
 app.get("/adminMenu/Stats",function(req,res){
     res.sendFile(__dirname + "/public/statsAdmin.html");
 });
-
+//------------------------all users from mongodb---------------------------------//
+app.get("/showData",async(req,res)=>{
+    const all = await User.find({});
+    res.json(all);
+})
+//-----------------------all ice creams from mongodb-------------//
+app.get("/adminMenu/showIceCreamsList",async(req,res)=>{
+    const all = await IceCream.find({});
+    res.json(all);
+})
+//-----------------------all ice creams sorted by countOrdered------------//
+app.get("/adminMenu/showMostWantedIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({countOrdered:-1});
+    res.json(all);
+});
+//-----------------------all ice creams sorted by price------------//
+app.get("/adminMenu/showMaxPriceIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({price:-1});
+    res.json(all);
+});
+app.get("/adminMenu/showMinPriceIceCream",async(req,res)=>{
+    const all = await IceCream.find({}).sort({price:1});
+    res.json(all);
+});
+//------------------------------all reservations--------------------//
 app.get("/adminMenu/showReservations",async(req,res)=>{
     const all = await Reservation.find({});
     res.json(all);
 })
-
+//-----------------------------log-out------------------------------//
+app.get("/logout", (req,res)=>{
+    req.session.destroy((err)=>{
+        if (err) throw err;
+        res.redirect("/");
+    });
+});
+//----------------------------------Blocked Pages------------------//
+app.get("/loginReminder",function(req,res){
+    res.sendFile(__dirname+ "/public/loginReminder.html");
+});
+app.get("/guestReminder",isAuth,function(req,res){
+    res.sendFile(__dirname+ "/public/guestReminder.html");
+});
+app.get("/adminReminder",function(req,res){
+    res.sendFile(__dirname   + "/public/adminReminder.html");
+});
+app.get("/wrongQuantity",function(req,res){
+    res.sendFile(__dirname + "/public/wrongQuantity.html");
+});
+///////////////////////////////////////////////////////////////////////
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
+///////////////////////////////////////////////////////////////////////
