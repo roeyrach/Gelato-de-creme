@@ -239,20 +239,24 @@ app.get("/recommendedIceCream",async(req,res)=>{
     const user = await User.findOne({"email":req.session.email});
     const arr = user.listOfOrders;
     let keys = Array.from(arr.keys());
-    for (let i =0; i < keys.length; i++){
-        const iceCreamName = keys[i];
-        const str = user.listOfOrders.get(iceCreamName);
-        const num = parseInt(str);
-        if (num > max){
-            max = num;
-            recName = iceCreamName;
+    if (keys.length != 0){
+        for (let i =0; i < keys.length; i++){
+            const iceCreamName = keys[i];
+            const str = user.listOfOrders.get(iceCreamName);
+            const num = parseInt(str);
+            if (num > max){
+                max = num;
+                recName = iceCreamName;
+            }
         }
+        const icecream = await IceCream.findOne({"name":recName});
+        res.json({
+            "recName" : recName,
+            "flavor" : icecream.flavor,
+        })
+    }else{
+        res.json({"text":"We Don't Know Anything yet"});
     }
-    const icecream = await IceCream.findOne({"name":recName});
-    res.json({
-        "recName" : recName,
-        "flavor" : icecream.flavor,
-    })
 })
 //--------------------selected ice cream json--------------------------------//
 app.get("/selectedIceCreams",(req,res)=>{
@@ -384,6 +388,34 @@ app.get("/adminReminder",function(req,res){
 });
 app.get("/wrongQuantity",function(req,res){
     res.sendFile(__dirname + "/public/wrongQuantity.html");
+});
+//-----------------------------profile json--------------------------//
+app.get("/profileInfo",async(req,res)=>{
+    const name = req.session.fullname;
+    const email = req.session.email;
+    const listOfOrders = await Reservation.find({"email":email});
+    res.json({
+                "name":name,
+                "email":email,
+                "listOfOrders":listOfOrders
+            })
+});
+//------------------------------change password----------------------//
+app.get("/changePassword",isAuth,(req,res)=>{
+    res.sendFile(__dirname + "/public/changePassword.html");
+})
+app.post("/changePassword",async(req,res)=>{
+    const password = req.body.pass;
+    const rePassword = req.body.repass;
+    const hasdPsw = await bcrypt.hash(password, 12);
+    if (password === rePassword && password.length >= 6){
+        await User.findOneAndUpdate({"email":req.session.email},{$set:{"password":hasdPsw}},{new:true},(err,doc)=>{
+            res.redirect("/userMenu");
+        });
+    }else{
+        res.redirect("/changePassword");
+    }
+
 });
 ///////////////////////////////////////////////////////////////////////
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));

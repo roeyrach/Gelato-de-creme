@@ -44,9 +44,15 @@ var swiper = new Swiper(".reviews-slider", {
 
 function recommend(){
 	$.get('/recommendedIceCream',function(data,status){
-		$("#toShowHistroy").css('visibility','hidden');
-		$("#historyFlavor").text("Flavor - " + data.flavor); 
-		$("#historyName").text("Or More Specific - " + data.recName);
+		if (data.flavor === undefined && data.recName === undefined){
+			$("#toShowHistroy").css('visibility','hidden');
+			$("#historyFlavor").text(data.text).css('color','red'); 
+		}else{
+			$("#toShowHistroy").css('visibility','hidden');
+			$("#historyFlavor").text("Flavor - " + data.flavor); 
+			$("#historyName").text("Or More Specific - " + data.recName);
+		}
+			
 	})
 }
 
@@ -150,10 +156,6 @@ function searchIceCreamsList1(){
 		}
 	});
 }
-
-// 
-
-
 function searchIceCreamsList2(){
 	$("#iceCreams2").css('visibility','visible');
 	$("#text1").css('visibility','visible');
@@ -310,9 +312,6 @@ function searchIceCreamsList2(){
 	});
 }
 
-
-
-
 function f(){
 	var data = JSON.parse(localStorage.getItem("result"));
 	console.log("data = " + data);
@@ -321,62 +320,21 @@ function f(){
 function redirectToIceCreamsMenu(){
 	window.location.replace("/adminMenu/iceCreams");
 }
-function graph1(){
-	const data = [];
-	$.get('/adminMenu/showReservations',function(data1,status){
-		for (let i=0; i<data.length; i++){
-			data[i] = data1[i];
+function profileInfo(){
+	$("#proDiv").css('visibility','visible')
+	$.get('/profileInfo',function(data,status){
+		$("#profileName").text(data.name);
+		$("#profileEmail").text(data.email);
+		for (let i =0; i<data.listOfOrders.length; i++){
+			const index = i+1;
+			const arr = data.listOfOrders[i].content.split("_");
+			const name = arr[0];
+			const quantity = arr[1];
+			$("#pdivP").append("-------------------------");
+			$("#pdivP").append("<p>Order Number - " + index + "</p>");
+			$("#pdivP").append("<p>Name - " + name + " , Quantity - " + quantity +" KG</p>");
+			$("#pdivP").append("<p>Price - " + data.listOfOrders[i].price + "$</p>");
+			$("#pdivP").append("<p>Date - " + data.listOfOrders[i].date + "</p>");
 		}
-	});
-	
-	const width = 900
-	const height = 450
-	const margin = { top: 50, bottom: 50, left: 50, right: 50 }
-
-	const svg = d3
-		.select("#d3-container")
-		.append("svg")
-		.attr("width", width - margin.left - margin.right)
-		.attr("height", height - margin.top - margin.bottom)
-		.attr("viewBox", [0, 0, width, height])
-
-	const x = d3
-		.scaleBand()
-		.domain([0,100])
-		.range([margin.left, width - margin.right])
-		.padding(0.1)
-
-	const y = d3
-		.scaleLinear()
-		.domain([0, 100])
-		.range([height - margin.bottom, margin.top])
-
-	svg
-		.append("g")
-		.attr("fill", "royalblue")
-		.selectAll("rect")
-		.data(data.sort((a, b) => d3.descending(a.score, b.score)))
-		.join("rect")
-		.attr("x", (d, i) => x(i))
-		.attr("y", (d) => y(d.score))
-		.attr("title", (d) => d.score)
-		.attr("class", "rect")
-		.attr("height", (d) => y(0) - y(d.score))
-		.attr("width", x.bandwidth())
-
-	function yAxis(g) {
-		g.attr("transform", `translate(${margin.left}, 0)`)
-			.call(d3.axisLeft(y).ticks(null, data.format))
-			.attr("font-size", "20px")
-	}
-
-	function xAxis(g) {
-		g.attr("transform", `translate(0,${height - margin.bottom})`)
-			.call(d3.axisBottom(x).tickFormat((i) => data[i].name))
-			.attr("font-size", "20px")
-	}
-
-	svg.append("g").call(xAxis)
-	svg.append("g").call(yAxis)
-	svg.node()
+	})
 }
