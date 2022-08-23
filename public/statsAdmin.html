@@ -35,7 +35,7 @@
 
 		<script src="/js/script.js"></script>
 
-		<script src="https://d3js.org/d3.v7.min.js"></script>
+		<script src="https://d3js.org/d3.v4.js"></script>
 	</head>
 	<body>
 		<section class="header">
@@ -51,11 +51,69 @@
 
 			<div id="menu-btn" class="fas fa-bars"></div>
 		</section>
+		<div style="text-align: center; align-items: center;">
+			<br>
+			<svg width="500" height="400"></svg> <!--Step 2-->
+		</div>
+    <script>
+        $.get('/profileInfo',function(data,status){
+			console.log(data);
+		})
 
-		<section>
-			<h1 style="text-align: center" id="head" class="heading">Graph Will Be here</h1>
-            <button style="text-align: center;" onclick="graph1()">Show Stats</button>
-			<div class="graphDiv" id="d3-container"></div>
-		</section>
+        // Step 3
+        var svg = d3.select("svg"),
+            width = svg.attr("width"),
+            height = svg.attr("height"),
+            radius = 200;
+
+        // Step 1        
+        var data = [{name: "Roy", share: 25}, 
+                    {name: "Roey", share: 25},
+					{name: "Yuval", share: 25},
+					{name: "Ofir", share: 25}];
+
+        var g = svg.append("g")
+                   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        // Step 4
+        var ordScale = d3.scaleOrdinal()
+                        	.domain(data)
+                        	.range(['#ffd384','#94ebcd','#fbaccc','#d3e0ea','#fa7f72']);
+
+        // Step 5
+        var pie = d3.pie().value(function(d) { 
+                return d.share; 
+            });
+
+        var arc = g.selectAll("arc")
+                   .data(pie(data))
+                   .enter();
+
+        // Step 6
+        var path = d3.arc()
+                     .outerRadius(radius)
+                     .innerRadius(0);
+
+        arc.append("path")
+           .attr("d", path)
+           .attr("fill", function(d) { return ordScale(d.data.name); });
+
+        // Step 7
+        var label = d3.arc()
+                      .outerRadius(radius)
+                      .innerRadius(0);
+            
+        arc.append("text")
+           .attr("transform", function(d) { 
+                    return "translate(" + label.centroid(d) + ")"; 
+            })
+           .text(function(d) { return d.data.name; })
+           .style("font-family", "arial")
+           .style("font-size", 15);
+            
+
+            
+    </script>
+
 	</body>
 </html>
