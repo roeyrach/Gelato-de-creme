@@ -45,6 +45,7 @@
             <a href="/adminMenu">Menu</a>
             <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
             <a href="/adminMenu/Stats">Stats Menu</a>
+            <a href="/googleMaps">Google Maps Menu</a>
             <a href="/logout">Log-Out</a>
 
         </nav>
@@ -57,12 +58,14 @@
             <table id="gelateriasTable1" style="width:100%; text-align: center;" >
                 <tr>
                     <th>Address</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
                     <th>Photo</th>
                 </tr>
               </table>
             </div>
     </section>
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Add Gelateria</h1>
         <form action="/addGelateria" method="POST">
             <div class="box-container">
@@ -70,6 +73,10 @@
                     <div class="inputBox">
                         <span>Address</span>
                         <input type="text" name="address"  placeholder="enter address" />
+                        <span>Latitude</span>
+                        <input type="text" name="lat"  placeholder="enter Latitude" />
+                        <span>Longitude</span>
+                        <input type="text" name="lng"  placeholder="enter Longitude" />
                     </div>
                     <div class="inputBox">
                         <span>Photo URL</span>
@@ -80,7 +87,7 @@
             <input type="submit" value="Add" class="btn"/>
         </form>
     </section>
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Update Gelateria</h1>
         <form action="/updateGelateria" method="POST">
             <div class="box-container">
@@ -97,7 +104,7 @@
             <input type="submit" value="Update" class="btn"/>        
     </section>
     
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Delete Gelateria</h1>
         <form action="/deleteGelateria" method="POST">
             <div class="box-container">
@@ -114,6 +121,8 @@
 		for (let i=0; i< data.length; i++){
 				var row = "<tr>"
 				+"<td>"  + data[i].address + "</td>"
+                +"<td>"  + data[i].latitude + "</td>"
+                +"<td>"  + data[i].longitude + "</td>"
                 +"<td><img style='width:130px'; src='" + data[i].photoURL + "'></td>"
 				+"</tr>";
 				$("#gelateriasTable1").append(row);

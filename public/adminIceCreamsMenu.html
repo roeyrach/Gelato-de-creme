@@ -50,7 +50,7 @@
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
-        <h1 onclick="searchIceCreamsList1()" class="heading">Ice Creams List</h1>
+        <h1 class="heading">Ice Creams List</h1>
         <div id="iceCreams1" class="box-container" style="visibility: hidden;">
             <table id="iceCreamsTable1" style="width:100%; text-align: center;" >
                 <tr>
@@ -64,7 +64,7 @@
               </table>
             </div>
     </section>
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Add Ice Cream</h1>
         <form action="/addIceCream" method="POST">
             <div class="box-container">
@@ -96,7 +96,7 @@
             <input type="submit" value="Add" class="btn"/>
         </form>
     </section>
-    <section id="order" class="order">
+    <section id="sign" class="sign">
         <h1 class="heading">Search</h1>
         <form action="/searchResults" method="get">
             <div class="box-container">
@@ -132,7 +132,7 @@
             </div>
             </form>
     </section>
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Update Ice Cream</h1>
         <form action="/updateIceCream" method="POST">
             <div class="box-container">
@@ -155,7 +155,7 @@
             <input type="submit" value="Update" class="btn"/>        
     </section>
     
-    <section class="order" id="order">
+    <section class="sign" id="sign">
         <h1 class="heading">Delete Ice Cream</h1>
         <form action="/deleteIceCream" method="POST">
             <div class="box-container">
@@ -167,6 +167,21 @@
                 </form>
             <input type="submit" value="Delete" class="btn"/>        
     </section>
-
+    <script>
+        $("#iceCreams1").css('visibility','visible');
+	    $.get('/adminMenu/showIceCreamsList',function(data,status){
+		for (let i=0; i< data.length; i++){
+			var row = "<tr>"
+					+"<td>" + data[i].name + "</td>"
+					+"<td>" + data[i].flavor + "</td>"
+					+"<td>" + data[i].quantity + "</td>"
+					+"<td>" + data[i].price +"$</td>"
+					+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+					+"<td>" + data[i].countOrdered + "</td>" +
+					"</tr>";
+			$("#iceCreamsTable1").append(row);
+		}
+	});
+    </script>
 </body>
 </html>

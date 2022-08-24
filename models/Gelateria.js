@@ -7,6 +7,14 @@ const gelateriaSchema = new Schema({
     required: true,
     unique:true
   },
+  latitude:{
+    type:Number,
+    required: true,
+  },
+  longitude:{
+    type: Number,
+    required:true,
+  },
   photoURL: {
     type: String,
     required:false,

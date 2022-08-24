@@ -41,19 +41,33 @@
         </a>
 
         <nav class="navbar">
-            <a href="/cancelOrder">Cancel Order</a>            
-            <a href="/userMenu">Continue Order</a>
+            <a id="cancel" href="/cancelOrder">Cancel Order</a>            
         </nav>
 
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section id="sec2" style="text-align: center; align-items: center;">
-        <button onclick="selectedIceCreamsDisplay()" id="btnSec2">Click To Show Selected Ice Creams</button>
     </section>
     <section style="text-align: center;">
         <form action="/finishOrder" method="post">
             <button style="visibility: hidden; background-color: aquamarine; border-radius: 5px; border-color:white;	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); font-size: x-large;" id="btnFinishOrder">Order</button>
         </form>
     </section>
+    <script>
+        let arr = $.get("/selectedIceCreams",function(data,status){
+            for (let i =0; i<data.length; i++){
+                const str = data[i].split("_");
+                const name = str[0];                
+                const quantity = str[1];
+                if (name != "nothing yet"){
+                    $("#sec2").append("<br><div class='card1'><img src='https://avirtualvegan.com/wp-content/uploads/2015/05/DSC_0209.jpg' alt='Avatar' style='width:30%';><div class='container'><h1><b>" + name +"</b></h1><p>" + quantity + " kilos" + "</p></div></div><br>");
+                    $("#btnFinishOrder").css('visibility','visible');
+                }else{
+                    $("#sec2").append("<br><div class='card1'><h1><b>You Did Not Select Anything Yet</b></h1></div></div><br>");
+                    $("#cancel").text("Start Order")
+                }
+            }
+        })
+    </script>
 </body>
 </html>

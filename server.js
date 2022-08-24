@@ -381,6 +381,8 @@ app.get("/adminMenu/gelaterias",isAdmin,(req,res)=>{
 //--------------------------add gelateria--------------------------//
 app.post("/addGelateria",async(req,res)=>{
     const address = req.body.address;
+    const latitude = req.body.lat;
+    const longitude = req.body.lng;
     const photoURL = req.body.photoURL;
     
     let gelateria = await Gelateria.findOne({address});
@@ -389,6 +391,8 @@ app.post("/addGelateria",async(req,res)=>{
     }else{
         gelateria = new Gelateria({
             address,
+            latitude,
+            longitude,
             photoURL
         });
         await gelateria.save();
@@ -513,6 +517,11 @@ app.get("/resPerDate",async(req,res)=>{
 //----------------------------Google Maps-----------------------------//
 app.get("/googleMaps",(req,res)=>{
     res.sendFile(__dirname + "/public/googleMaps.html");
+})
+//---------------------------all gelaterias--------------------------//
+app.get("/showGel",async(req,res)=>{
+    const doc = await Gelateria.find({});
+    res.json(doc);
 })
 ///////////////////////////////////////////////////////////////////////
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));

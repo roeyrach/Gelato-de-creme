@@ -351,21 +351,3 @@ function f(){
 function redirectToIceCreamsMenu(){
 	window.location.replace("/adminMenu/iceCreams");
 }
-function profileInfo(){
-	$("#proDiv").css('visibility','visible')
-	$.get('/profileInfo',function(data,status){
-		$("#profileName").text(data.name);
-		$("#profileEmail").text(data.email);
-		for (let i =0; i<data.listOfOrders.length; i++){
-			const index = i+1;
-			const arr = data.listOfOrders[i].content.split("_");
-			const name = arr[0];
-			const quantity = arr[1];
-			$("#pdivP").append("-------------------------");
-			$("#pdivP").append("<p>Order Number - " + index + "</p>");
-			$("#pdivP").append("<p>Name - " + name + " , Quantity - " + quantity +" KG</p>");
-			$("#pdivP").append("<p>Price - " + data.listOfOrders[i].price + "$</p>");
-			$("#pdivP").append("<p>Date - " + data.listOfOrders[i].date + "</p>");
-		}
-	})
-}

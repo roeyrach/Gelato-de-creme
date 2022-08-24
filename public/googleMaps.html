@@ -1,11 +1,60 @@
-<html>
-  <head>
-    <title>Simple Map</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQjZcimwSklHcdldamDTXj3eqk9f_4a34&callback=initMap&v=weekly"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Menu Page</title>
+    <!-- font awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+        table, th, td {
+          border:1px solid black;
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: large;
+        }
+    </style>
+        
+
+    <!-- swiper -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
+    />
+    <!-- lightgallery -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/css/lightgallery.min.css"
+    />
+    <!-- custom css -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="/js/script.js"></script>
+    <script    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQjZcimwSklHcdldamDTXj3eqk9f_4a34&callback=initMap&v=weekly"
     defer
   ></script>
+</script>
+
+</head>
+<body>
+    <section class="header">
+        <a href="#" class="logo">
+            <i class="fas fa-ice-cream"></i> Gelato de creme
+        </a>
+
+        <nav class="navbar">
+            <a href="/adminMenu">Menu</a>
+            <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
+            <a href="/adminMenu/Stats">Stats Menu</a>
+            <a href="/logout">Log-Out</a>
+
+        </nav>
+
+        <div id="menu-btn" class="fas fa-bars"></div>
+    </section>
     <style>
         /* 
         * Always set the map height explicitly to define the size of the div element
@@ -32,29 +81,52 @@
     </style>
   </head>
   <body>
-    <h1>Google Maps</h1>
     <div id="map1"></div>
     <script>
         let map;
+        let center = [];
+
             function initMap() {
-            map = new google.maps.Map(document.getElementById("map1"), {
-                center: { lat: 28.70, lng: 77.1025 },
-                zoom: 8,
-            });
-            const marker = new google.maps.Marker({
-                position: {lat: 28.70, lng: 77.1025},
-                map:map,
-                label: "A",
-                title: "New Delhi",
-                draggable: false,
-                animation: google.maps.Animation.DROP
-            });
-            const infoWindow = new google.maps.InfoWindow({
-                content: "<p>This is an info window</p>"
-            })
-            infoWindow.open(map,marker)
-        }
+            $.get('/showGel',(data,status)=>{
+            for (let i=0; i<data.length; i++){
+                const item = {
+                    lat: data[i].latitude,
+                    lng: data[i].longitude
+                }
+                center.push(item);
+            }
+            let maps = [];
+            let markers = [];
+            let infoWindows = [];
+            for(let i =0; i < center.length; i++){
+                map = new google.maps.Map(document.getElementById("map1"), {
+                    center : center[i],
+                    zoom: 17,
+                });
+                maps.push(map);
+                let number = i;
+                let newNumber = i+1;
+                const labelStr = newNumber.toString();
+                const marker = new google.maps.Marker({
+                    position: center[i],
+                    map:map,
+                    label: labelStr,
+                    title: "New Delhi",
+                    draggable: false,
+                    animation: google.maps.Animation.DROP
+                });
+                markers.push(marker);
+                const infoWindow = new google.maps.InfoWindow({
+                    content: "<p><b>" + data[i].address + "</b></p>"
+                })
+                infoWindows.push(infoWindow);
+            }
+            for (let i = 0; i < center.length; i++){
+                infoWindows[i].open(maps[i],markers[i])
+            }
+        });
         window.initMap = initMap;
+    }
     </script>
   </body>
 </html>
