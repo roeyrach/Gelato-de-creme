@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQjZcimwSklHcdldamDTXj3eqk9f_4a34&callback=initMap&v=weekly"
+    defer
+  ></script>
+    <style>
+        /* 
+        * Always set the map height explicitly to define the size of the div element
+        * that contains the map. 
+        */
+        #map {
+        height: 100%;
+        }
+
+        /* 
+        * Optional: Makes the sample page fill the window. 
+        */
+        html,
+        body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        }
+        #map1{
+            height: 80%;
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+  </head>
+  <body>
+    <h1>Google Maps</h1>
+    <div id="map1"></div>
+    <script>
+        let map;
+            function initMap() {
+            map = new google.maps.Map(document.getElementById("map1"), {
+                center: { lat: 28.70, lng: 77.1025 },
+                zoom: 8,
+            });
+            const marker = new google.maps.Marker({
+                position: {lat: 28.70, lng: 77.1025},
+                map:map,
+                label: "A",
+                title: "New Delhi",
+                draggable: false,
+                animation: google.maps.Animation.DROP
+            });
+            const infoWindow = new google.maps.InfoWindow({
+                content: "<p>This is an info window</p>"
+            })
+            infoWindow.open(map,marker)
+        }
+        window.initMap = initMap;
+    </script>
+  </body>
+</html>

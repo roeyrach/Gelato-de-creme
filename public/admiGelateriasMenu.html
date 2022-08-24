@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Menu Page</title>
+    <!-- font awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+        table, th, td {
+          border:1px solid black;
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: large;
+        }
+    </style>
+        
+
+    <!-- swiper -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
+    />
+    <!-- lightgallery -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery-js/1.4.0/css/lightgallery.min.css"
+    />
+    <!-- custom css -->
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="/js/script.js"></script>
+
+</head>
+<body>
+    <section class="header">
+        <a href="#" class="logo">
+            <i class="fas fa-ice-cream"></i> Gelato de creme
+        </a>
+
+        <nav class="navbar">
+            <a href="/adminMenu">Menu</a>
+            <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
+            <a href="/adminMenu/Stats">Stats Menu</a>
+            <a href="/logout">Log-Out</a>
+
+        </nav>
+
+        <div id="menu-btn" class="fas fa-bars"></div>
+    </section>
+    <section>
+        <h1 class="heading">Gelaterias List</h1>
+        <div id="iceCreams1" class="box-container">
+            <table id="gelateriasTable1" style="width:100%; text-align: center;" >
+                <tr>
+                    <th>Address</th>
+                    <th>Photo</th>
+                </tr>
+              </table>
+            </div>
+    </section>
+    <section class="order" id="order">
+        <h1 class="heading">Add Gelateria</h1>
+        <form action="/addGelateria" method="POST">
+            <div class="box-container">
+                <div class="box">
+                    <div class="inputBox">
+                        <span>Address</span>
+                        <input type="text" name="address"  placeholder="enter address" />
+                    </div>
+                    <div class="inputBox">
+                        <span>Photo URL</span>
+                        <input type="text" id="photourl" name="photoURL" placeholder="enter photo url" />
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Add" class="btn"/>
+        </form>
+    </section>
+    <section class="order" id="order">
+        <h1 class="heading">Update Gelateria</h1>
+        <form action="/updateGelateria" method="POST">
+            <div class="box-container">
+                <div class="box">
+                <div class="inputBox">
+                    <span>New Address</span>
+                    <input type="text" name="address" placeholder="enter new address" />
+                </div>
+                <div class="inputBox">
+                    <span>New Photo URL</span>
+                    <input type="text" name="url" placeholder="enter new url" />
+                </div>
+            </form>
+            <input type="submit" value="Update" class="btn"/>        
+    </section>
+    
+    <section class="order" id="order">
+        <h1 class="heading">Delete Gelateria</h1>
+        <form action="/deleteGelateria" method="POST">
+            <div class="box-container">
+                <div class="box">
+                <div class="inputBox">
+                    <span>Delete By Address<span>
+                    <input type="text" name="address" placeholder="enter address" />
+                </div>
+                </form>
+            <input type="submit" value="Delete" class="btn"/>        
+    </section>
+    <script>
+        $.get('/showGelaterias',function(data,status){
+		for (let i=0; i< data.length; i++){
+				var row = "<tr>"
+				+"<td>"  + data[i].address + "</td>"
+                +"<td><img style='width:130px'; src='" + data[i].photoURL + "'></td>"
+				+"</tr>";
+				$("#gelateriasTable1").append(row);
+			}
+        });
+    </script>
+</body>
+</html>

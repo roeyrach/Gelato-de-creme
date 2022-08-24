@@ -49,9 +49,8 @@
     </section>
     <section>
         <br>
-        <button onclick="searchIceCreamsList2()">Click Me To Show Results</button>
         <br>
-        <div id="iceCreams2" class="box-container" style="visibility: hidden; text-align: center;">
+        <div id="iceCreams2" class="box-container" style="text-align: center;">
             <br>
             <h1 class="heading" id="SearchParam"></h1>
             <br>
@@ -69,5 +68,158 @@
     </div>                        
 </div>
     </section>
+    <script>
+	$.get('/adminMenu/showIceCreamsList',function(data,status){
+		let count = 0;
+		let index = 0;
+		str = window.location.search;
+		if (typeof str === 'string'){
+			var firstSplit = str.toString().split("?");
+			var params = firstSplit.toString().split("&");
+			for (let i=0; i<params.length; i++){
+				var arr = params[i].toString().split("=");
+				var result = arr[1];
+				if (result != "")
+					index = i;
+			}
+			 if (index === 0){
+				var arr = params[0].toString().split("=");
+				var value = arr[1];
+				if (value === "All"){
+					$("#SearchParam").text("All Ice Creams");
+					for (let i=0; i<data.length; i++){
+						var row = "<tr>"
+						+"<td>" + data[i].name + "</td>"
+						+"<td>" + data[i].flavor + "</td>"
+						+"<td>" + data[i].quantity + "</td>"
+						+"<td>" + data[i].price +"$</td>"
+						+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+						+"<td>" + data[i].countOrdered + "</td>" +
+						"</tr>";
+						$("#iceCreamsTable2").append(row);
+					}
+				}
+				if (value === "Most+Purchased+"){
+					$("#SearchParam").text("Sort By Most Purchased");
+					$.get('/adminMenu/showMostWantedIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}
+				if (value === "Max+Price"){
+					$("#SearchParam").text("Sort By Max Price");
+					$.get('/adminMenu/showMaxPriceIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}
+				if (value === "Min+Price"){
+					$("#SearchParam").text("Sort By Min Price");
+					$.get('/adminMenu/showMinPriceIceCream',function(data,status){
+						for (let i=0; i<data.length; i++){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>"
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+					});
+				}	
+			 }
+			 else{
+				var arr = params[index].toString().split("=");
+				var param = arr[0];
+				var result = arr[1];
+				$("#SearchParam").text("Results for Specific " + param);
+				for (let i=0; i< data.length; i++){
+					if (param === "name"){
+						if (data[i].name === result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "flavor"){
+						if (data[i].flavor === result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "quantity"){
+						if (data[i].quantity == result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+					else if (param === "price"){
+						if (data[i].price == result){
+							var row = "<tr>"
+							+"<td>" + data[i].name + "</td>"
+							+"<td>" + data[i].flavor + "</td>"
+							+"<td>" + data[i].quantity + "</td>"
+							+"<td>" + data[i].price +"$</td>" 
+							+"<td><img style='width:130px'; src='" + data[i].photoURL + "';></td>"
+							+"<td>" + data[i].countOrdered + "</td>" +
+							"</tr>";
+							$("#iceCreamsTable2").append(row);
+						}
+						count++;
+					}
+				}
+
+				if (count === 0){
+					var row = "<tr><td>Couldn't find anything</td></tr>"
+					$("#iceCreamsTable2").append(row);
+				}
+			}
+		
+		}
+	}); 
+    </script>
 </body>
 </html>

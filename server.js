@@ -15,6 +15,7 @@ const Reservation = require("./models/Reservation");
 const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const isGuest = require('./middleware/is-guest');
+const Gelateria = require('./models/Gelateria');
 const PORT = 8081;
 
 //connect to database
@@ -340,6 +341,45 @@ app.post("/deleteIceCream",async(req,res)=>{
 app.get("/adminMenu/Stats",function(req,res){
     res.sendFile(__dirname + "/public/statsAdmin.html");
 });
+//--------------------------Gelateria admin's Menu----------------//
+app.get("/adminMenu/gelaterias",isAdmin,(req,res)=>{
+    res.sendFile(__dirname + "/public/admiGelateriasMenu.html");
+})
+//--------------------------add gelateria--------------------------//
+app.post("/addGelateria",async(req,res)=>{
+    const address = req.body.address;
+    const photoURL = req.body.photoURL;
+    
+    let gelateria = await Gelateria.findOne({address});
+    if (gelateria){
+        res.redirect("/adminMenu/gelaterias");
+    }else{
+        gelateria = new Gelateria({
+            address,
+            photoURL
+        });
+        await gelateria.save();
+        res.redirect("/adminMenu/gelaterias");
+    }
+})
+//-----------------------------update photo url gelateria--------------//
+app.post("/updateGelateria",async(req,res)=>{
+    const address = req.body.address;
+    const url = req.body.url;
+    await Gelateria.findOneAndUpdate({"address":address},{$set:{"photoURL": url}},{new:true},(err,doc)=>{
+        res.redirect("/adminMenu/gelaterias");
+    });
+})
+//--------------------------delete gelateria by address---------------------//
+app.post("/deleteGelateria",async(req,res)=>{
+    const address = req.body.address;
+    await Gelateria.findOneAndDelete({"address": address});
+});
+//---------------------------all gelaterias from mongodb-------------------------//
+app.get("/showGelaterias",async(req,res)=>{
+    const doc = await Gelateria.find({});
+    res.json(doc);
+})
 //------------------------all users from mongodb---------------------------------//
 app.get("/showData",async(req,res)=>{
     const all = await User.find({});
@@ -418,42 +458,30 @@ app.post("/changePassword",async(req,res)=>{
 
 });
 //------------------------flavors ordered----------------------------//
-app.get("/flavorsPie",async(req,res)=>{
-    let arrayOfIceCream = [];
-    let totalOrdersCount = 0;
-    let flavorToCount = new Map();
-    const arr = await IceCream.find({});
-    for (let i=0; i<arr.length; i++){
-        if (!flavorToCount.has(arr[i].flavor)){
-            flavorToCount.set(arr[i].flavor,arr[i].countOrdered);
-        }else{
-            var number = flavorToCount.get(arr[i].flavor);
-            var newNumber = number + arr[i].countOrdered;
-            flavorToCount.set(arr[i].flavor,newNumber);
-        }
-        totalOrdersCount += arr[i].countOrdered;
-    }
-    let keys = Array.from(flavorToCount.keys());
-    for (let i=0; i< keys.length; i++){
-        const number = flavorToCount.get(keys[i]);
-        const item = {
-            "flavor": keys[i],
-            "number": number,
-            "totalOrders": totalOrdersCount,
-        }
-        arrayOfIceCream.push(item);
-    }
-    res.json(arrayOfIceCream);
+app.get("/flavorsPie1",async(req,res)=>{
+    let toSend = [];
+    const total = await IceCream.aggregate([
+        {$group:{_id: "all" , count:{$sum:"$countOrdered"}}}
+    ])
+    toSend.push(total)
+    const doc = await IceCream.aggregate([
+        {$group:{_id:"$flavor", count:{$sum: "$countOrdered" }}}
+    ])
+    toSend.push(doc);
+    res.json(toSend);
 })
 //---------------------------Reservations Per Date------------------//
 app.get("/resPerDate",async(req,res)=>{
     const doc = await Reservation.aggregate([
-        {$match: {}},
-        {$group: {"date": "22-08-21"}}
+        {$group:{_id: "$date",count: {$sum:1}}},
     ]);
-    console.log(count);
-    res.json(count);
+    res.json(doc);
+})
+//----------------------------Google Maps-----------------------------//
+app.get("/googleMaps",(req,res)=>{
+    res.sendFile(__dirname + "/public/googleMaps.html");
 })
 ///////////////////////////////////////////////////////////////////////
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
 ///////////////////////////////////////////////////////////////////////
+//API_KEY = AIzaSyBQjZcimwSklHcdldamDTXj3eqk9f_4a34

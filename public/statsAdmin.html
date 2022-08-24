@@ -48,6 +48,7 @@
 			<nav class="navbar">
 				<a href="/adminMenu">Menu</a>
 				<a href="/adminMenu/iceCreams">Ice Creams Menu</a>
+				<a href="/adminMenu/gelaterias">Gelaterias Menu</a>
 				<a href="/logout">Log-Out</a>
 			</nav>
 
@@ -57,33 +58,30 @@
 			<h1 class="heading">Flavors Ordered By Percentage</h1>
 			<svg width="500" height="400"></svg> <!--Step 2-->
 		</div>
-		<h1 class="heading">Graph2</h1>
+		<h1 class="heading">Orders Per Day</h1>
 		<!-- Create a div where the graph will take place -->
 		<div style="text-align: center;">
 			<div id="d3-container"></div>
 		</div>
     <script>
-        // Step 3
+		let data = [];
+		$.get("/flavorsPie1",(data1,status)=>{
+			console.log(data1[1].length + " = length")
+			for (let i = 0; i < data1[1].length; i++){
+				const intNumb = parseInt((data1[1][i].count / data1[0][0].count) * 100);
+				const item = {
+            		name: data1[1][i]._id + "- ~" + intNumb  + "%",
+            		percentage: intNumb
+        		}
+				data.push(item);
+			}
+        //Step 3
         var svg = d3.select("svg"),
             width = svg.attr("width"),
             height = svg.attr("height"),
             radius = 150;
 
-        // Step 1        
-	
-		var data = [];
-        $.get('/flavorsPie',function(data1,status){
-			console.log("percent  = " + data1[0].number / data1[0].totalOrders * 100 + "%");
-			for (let i =0; i < data1.length; i++){
-				const intNumb = parseInt(data1[i].number / data1[i].totalOrders * 100);
-				const item = {
-            		name: data1[i].flavor + "- ~" + intNumb  + "%",
-            		percentage: data1[i].number / data1[i].totalOrders * 100,
-        		}
-				data.push(item);
- 				console.log(data);
-			}
- 					
+        //Step 1        			
         var g = svg.append("g")
                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -121,22 +119,13 @@
            .text(function(d) { return d.data.name; })
            .style("font-family", "arial")
            .style("font-size", 15);
-		});
-
+		 });
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	let dataGraph2 = [];
 	$.get("/resPerDate",function(data,status){
-		console.log("count = " + data);
-	})
-	const dataGraph2 = [
-	{ name: 'John', score: 80 },
-	{ name: 'Simon', score: 76 },
-	// { name: 'Samantha', score: 90 },
-	{ name: 'Patrick', score: 82 },
-	// { name: 'Mary', score: 90 },
-	// { name: 'Christina', score: 75 },
-	// { name: 'Michael', score: 86 },
-	];
+		dataGraph2 = data;	
+		
 	const width1 = 900;
 	const height1 = 450;
 	const margin1 = { top: 50, bottom: 50, left: 50, right: 50 };
@@ -158,13 +147,13 @@
   	.append("g")
   	.attr("fill", 'royalblue')
   	.selectAll("rect")
-  	.data(dataGraph2.sort((a, b) => d3.descending(a.score, b.score)))
+  	.data(dataGraph2.sort((a, b) => d3.descending(a.count, b.count)))
   	.join("rect")
     .attr("x", (d, i) => x1(i))
-    .attr("y", d => y1(d.score))
-    .attr('title', (d) => d.score)
+    .attr("y", d => y1(d.count))
+    .attr('title', (d) => d.count)
     .attr("class", "rect")
-    .attr("height", d => y1(0) - y1(d.score))
+    .attr("height", d => y1(0) - y1(d.count))
     .attr("width", x1.bandwidth());
 
 	function yAxis(g) {
@@ -175,12 +164,14 @@
 
 	function xAxis(g) {
 	g.attr("transform", `translate(0,${height1 - margin1.bottom})`)
-		.call(d3.axisBottom(x1).tickFormat(i => dataGraph2[i].name))
+		.call(d3.axisBottom(x1).tickFormat(i => dataGraph2[i]._id))
 		.attr("font-size", '20px')
 	}
 	svg1.append("g").call(xAxis);
 	svg1.append("g").call(yAxis);
 	svg1.node();
+	})
+
     </script>
 	</body>
 </html>

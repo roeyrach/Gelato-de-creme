@@ -43,6 +43,7 @@
         <nav class="navbar">
             <a href="/adminMenu/iceCreams">Ice Creams Menu</a>
             <a href="/adminMenu/Stats">Stats Menu</a>
+            <a href="/adminMenu/gelaterias">Gelaterias Menu</a>
             <a href="/logout">Log-Out</a>
 
         </nav>
@@ -50,10 +51,10 @@
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section>
-        <h1 onclick="showData()" class="heading">Users List</h1>
-        <div id="users" style="visibility: hidden;text-align: center;">
+        <h1  class="heading">Users List</h1>
+        <div id="users">
         <br>
-        <table id="userstable" style="width:100%">
+        <table id="userstable" style="width:100%; text-align: center;">
             <tr>
               <th>Full Name</th>
               <th>Email</th>
@@ -62,5 +63,28 @@
           </table>
         </div>
     </section>
+    <script>   
+	$.get('showData',function(data,status){
+		for (let i=0; i< data.length; i++){
+			if (data[i].admin === true){
+				var row = "<tr>"
+				+"<td style='color:blue'>" + data[i].fullname + "</td>"
+				+"<td style='color:blue'>" + data[i].email + "</td>"
+				+"<td style='color:blue'>" + data[i].admin + "</td>"
+				+"</tr>";
+				$("#userstable").append(row);
+			}
+			else {
+					var row = "<tr>"
+					+"<td>" + data[i].fullname + "</td>"
+					+"<td>" + data[i].email + "</td>"
+					+"<td>" + data[i].admin + "</td>"
+					+"</tr>";
+					$("#userstable").append(row);
+				}
+			}
+		});
+
+    </script>
 </body>
 </html>
