@@ -1,4 +1,8 @@
 const express = require("express");
+const path = require('path');
+const http = require('http');
+const socketio = require('socket.io')
+const formatMessage = require('./public/js/utils/messages');
 const mongoclient = require('mongodb');
 const mongoose = require("mongoose");
 const multer = require("multer");
@@ -16,7 +20,10 @@ const isAuth = require("./middleware/is-auth");
 const isAdmin = require("./middleware/is-admin");
 const isGuest = require('./middleware/is-guest');
 const Gelateria = require('./models/Gelateria');
+const disconnect  = require('process');
 const PORT = 8081;
+const server = http.createServer(app);
+const io = socketio(server)
 
 //connect to database
 connectDB();
@@ -42,6 +49,32 @@ app.use(
   );
 
 //routes
+//------------------------For Chat--------------------//
+const MyName = 'Gelato de Creme';
+let userName = 'USER';
+app.get("/chat", isGuest, function(req,res){
+    res.sendFile(__dirname + "/public/chat.html");
+});
+
+app.get("/chatInner", isGuest, function(req,res){
+    userName = req.query.username;
+    res.sendFile(__dirname + "/public/chatInner.html");
+    // console.log(userName);
+});
+//---------------------------------Chat--------------------------------//
+io.on('connection', socket =>{
+    socket.emit('message', formatMessage(MyName,'Welcome'));
+    //Broadcast when a user connects
+    socket.broadcast.emit('message', formatMessage(MyName,'A user has joined the chat'));
+    //Broadcast when a user disconncets
+    socket.on('disconnect', ()=>{
+        io.emit('message', formatMessage(MyName,'A user has joined the chat'))
+    });
+    //Listen for chat message
+    socket.on('chatMessage', (msg)=>{
+        io.emit('message', formatMessage(userName,msg));
+    })
+});
 //---------------------------------------//
 //guest's routes
 //---------------------------------------//
