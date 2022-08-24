@@ -36,6 +36,8 @@
 		<script src="/js/script.js"></script>
 
 		<script src="https://d3js.org/d3.v4.js"></script>
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+
 	</head>
 	<body>
 		<section class="header">
@@ -52,26 +54,36 @@
 			<div id="menu-btn" class="fas fa-bars"></div>
 		</section>
 		<div style="text-align: center; align-items: center;">
-			<br>
+			<h1 class="heading">Flavors Ordered By Percentage</h1>
 			<svg width="500" height="400"></svg> <!--Step 2-->
 		</div>
+		<h1 class="heading">Graph2</h1>
+		<!-- Create a div where the graph will take place -->
+		<div style="text-align: center;">
+			<div id="d3-container"></div>
+		</div>
     <script>
-        $.get('/profileInfo',function(data,status){
-			console.log(data);
-		})
-
         // Step 3
         var svg = d3.select("svg"),
             width = svg.attr("width"),
             height = svg.attr("height"),
-            radius = 200;
+            radius = 150;
 
         // Step 1        
-        var data = [{name: "Roy", share: 25}, 
-                    {name: "Roey", share: 25},
-					{name: "Yuval", share: 25},
-					{name: "Ofir", share: 25}];
-
+	
+		var data = [];
+        $.get('/flavorsPie',function(data1,status){
+			console.log("percent  = " + data1[0].number / data1[0].totalOrders * 100 + "%");
+			for (let i =0; i < data1.length; i++){
+				const intNumb = parseInt(data1[i].number / data1[i].totalOrders * 100);
+				const item = {
+            		name: data1[i].flavor + "- ~" + intNumb  + "%",
+            		percentage: data1[i].number / data1[i].totalOrders * 100,
+        		}
+				data.push(item);
+ 				console.log(data);
+			}
+ 					
         var g = svg.append("g")
                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -82,13 +94,12 @@
 
         // Step 5
         var pie = d3.pie().value(function(d) { 
-                return d.share; 
+                return d.percentage; 
             });
 
         var arc = g.selectAll("arc")
                    .data(pie(data))
                    .enter();
-
         // Step 6
         var path = d3.arc()
                      .outerRadius(radius)
@@ -110,10 +121,66 @@
            .text(function(d) { return d.data.name; })
            .style("font-family", "arial")
            .style("font-size", 15);
-            
+		});
 
-            
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	$.get("/resPerDate",function(data,status){
+		console.log("count = " + data);
+	})
+	const dataGraph2 = [
+	{ name: 'John', score: 80 },
+	{ name: 'Simon', score: 76 },
+	// { name: 'Samantha', score: 90 },
+	{ name: 'Patrick', score: 82 },
+	// { name: 'Mary', score: 90 },
+	// { name: 'Christina', score: 75 },
+	// { name: 'Michael', score: 86 },
+	];
+	const width1 = 900;
+	const height1 = 450;
+	const margin1 = { top: 50, bottom: 50, left: 50, right: 50 };
+	const svg1 = d3.select('#d3-container')
+		.append('svg')
+		.attr('width', width1 - margin1.left - margin1.right)
+		.attr('height', height1 - margin1.top - margin1.bottom)
+		.attr("viewBox", [0, 0, width1, height1]);
+	const x1 = d3.scaleBand()
+  	.domain(d3.range(dataGraph2.length))
+  	.range([margin1.left, width1 - margin1.right])
+  	.padding(0.1)
+
+	const y1 = d3.scaleLinear()
+	.domain([0, 100])
+	.range([height1 - margin1.bottom, margin1.top]);
+
+	svg1
+  	.append("g")
+  	.attr("fill", 'royalblue')
+  	.selectAll("rect")
+  	.data(dataGraph2.sort((a, b) => d3.descending(a.score, b.score)))
+  	.join("rect")
+    .attr("x", (d, i) => x1(i))
+    .attr("y", d => y1(d.score))
+    .attr('title', (d) => d.score)
+    .attr("class", "rect")
+    .attr("height", d => y1(0) - y1(d.score))
+    .attr("width", x1.bandwidth());
+
+	function yAxis(g) {
+  	g.attr("transform", `translate(${margin1.left}, 0)`)
+    .call(d3.axisLeft(y1).ticks(null, dataGraph2.format))
+    .attr("font-size", '20px')
+}
+
+	function xAxis(g) {
+	g.attr("transform", `translate(0,${height1 - margin1.bottom})`)
+		.call(d3.axisBottom(x1).tickFormat(i => dataGraph2[i].name))
+		.attr("font-size", '20px')
+	}
+	svg1.append("g").call(xAxis);
+	svg1.append("g").call(yAxis);
+	svg1.node();
     </script>
-
 	</body>
 </html>

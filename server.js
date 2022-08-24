@@ -417,6 +417,43 @@ app.post("/changePassword",async(req,res)=>{
     }
 
 });
+//------------------------flavors ordered----------------------------//
+app.get("/flavorsPie",async(req,res)=>{
+    let arrayOfIceCream = [];
+    let totalOrdersCount = 0;
+    let flavorToCount = new Map();
+    const arr = await IceCream.find({});
+    for (let i=0; i<arr.length; i++){
+        if (!flavorToCount.has(arr[i].flavor)){
+            flavorToCount.set(arr[i].flavor,arr[i].countOrdered);
+        }else{
+            var number = flavorToCount.get(arr[i].flavor);
+            var newNumber = number + arr[i].countOrdered;
+            flavorToCount.set(arr[i].flavor,newNumber);
+        }
+        totalOrdersCount += arr[i].countOrdered;
+    }
+    let keys = Array.from(flavorToCount.keys());
+    for (let i=0; i< keys.length; i++){
+        const number = flavorToCount.get(keys[i]);
+        const item = {
+            "flavor": keys[i],
+            "number": number,
+            "totalOrders": totalOrdersCount,
+        }
+        arrayOfIceCream.push(item);
+    }
+    res.json(arrayOfIceCream);
+})
+//---------------------------Reservations Per Date------------------//
+app.get("/resPerDate",async(req,res)=>{
+    const doc = await Reservation.aggregate([
+        {$match: {}},
+        {$group: {"date": "22-08-21"}}
+    ]);
+    console.log(count);
+    res.json(count);
+})
 ///////////////////////////////////////////////////////////////////////
 app.listen(PORT,console.log(`port is running on port ${PORT}...`));
 ///////////////////////////////////////////////////////////////////////
