@@ -527,6 +527,6 @@ app.get("/showGel",async(req,res)=>{
     res.json(doc);
 })
 ///////////////////////////////////////////////////////////////////////
-app.listen(PORT,console.log(`port is running on port ${PORT}...`));
+server.listen(PORT,console.log(`port is running on port ${PORT}...`));
 ///////////////////////////////////////////////////////////////////////
 //API_KEY = AIzaSyBQjZcimwSklHcdldamDTXj3eqk9f_4a34
