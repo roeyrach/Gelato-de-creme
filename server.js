@@ -102,6 +102,7 @@ app.post('/signup', async (req,res) =>{
             email,
             password: hasdPsw,
             admin:false,
+            listOfOrders: null
         });
         await user.save();
         res.redirect("/signin");
@@ -218,7 +219,6 @@ app.post("/finishOrder",async(req,res)=>{
         const price = pricPerIceCream * quantity;
         console.log(price);
         const content = req.session.selected;
-        const arr = content.split(",");
         let reservation = await Reservation.findOne({ orderNumber });
         if (reservation){
             return res.redirect("/userMenu");    
@@ -230,30 +230,47 @@ app.post("/finishOrder",async(req,res)=>{
             price,
             content
         });
-        for (let i =0; i<arr.length; i++){
-            const name = arr[i].split("_")[0]; 
-            const ice = await IceCream.findOne({"name":name});
-            let count = ice.countOrdered;
-            const newCount = count +1;
-            await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": newCount }},{new:true},(err,doc)=>{
-            });
-            await User.findOne({"email":req.session.email},function(err,doc){
-                if (doc.listOfOrders.get(name[0]) != undefined){
-                    const str = doc.listOfOrders.get(name[0]);
+        console.log(name);
+        const ice = await IceCream.findOne({"name":name});
+        let count = ice.countOrdered;
+        const newCount = count +1;
+        await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": newCount }},{new:true},(err,doc)=>{
+        });
+        await User.findOne({"email":req.session.email},function(err,doc){
+            if (doc.listOfOrders == null){
+                doc.listOfOrders = new Map();
+                if (doc.listOfOrders.get(name) != undefined){
+                    const str = doc.listOfOrders.get(name);
                     const num = parseInt(str);
                     const newNum = num+1;
-                    doc.listOfOrders.set(name[0],newNum);
+                    doc.listOfOrders.set(name,newNum);
                     doc.save(function(err){
                         if (err) throw err;
                     });
-                }else{
-                    doc.listOfOrders.set(name[0],1);
+                }else {
+                    doc.listOfOrders.set(name,1);
                     doc.save(function(err){
                         if (err) throw err;
                     })
                 }
-            })
-        }
+            }
+            else{
+                if (doc.listOfOrders.get(name) != undefined){
+                    const str = doc.listOfOrders.get(name);
+                    const num = parseInt(str);
+                    const newNum = num+1;
+                    doc.listOfOrders.set(name,newNum);
+                    doc.save(function(err){
+                        if (err) throw err;
+                    });
+                }else {
+                    doc.listOfOrders.set(name,1);
+                    doc.save(function(err){
+                        if (err) throw err;
+                    })
+                }
+            }
+        });
         await reservation.save();
         res.redirect("/userMenu");
     }else{
@@ -277,25 +294,29 @@ app.get("/recommendedIceCream",async(req,res)=>{
     let max = 0;
     let recName = "";
     const user = await User.findOne({"email":req.session.email});
-    const arr = user.listOfOrders;
-    let keys = Array.from(arr.keys());
-    if (keys.length != 0){
-        for (let i =0; i < keys.length; i++){
-            const iceCreamName = keys[i];
-            const str = user.listOfOrders.get(iceCreamName);
-            const num = parseInt(str);
-            if (num > max){
-                max = num;
-                recName = iceCreamName;
-            }
-        }
-        const icecream = await IceCream.findOne({"name":recName});
-        res.json({
-            "recName" : recName,
-            "flavor" : icecream.flavor,
-        })
-    }else{
+    if (user.listOfOrders == null){
         res.json({"text":"We Don't Know Anything yet"});
+    }else{
+        const arr = user.listOfOrders;
+        let keys = Array.from(arr.keys());
+        if (keys.length != 0){
+            for (let i =0; i < keys.length; i++){
+                const iceCreamName = keys[i];
+                const str = user.listOfOrders.get(iceCreamName);
+                const num = parseInt(str);
+                if (num > max){
+                    max = num;
+                    recName = iceCreamName;
+                }
+            }
+            const iceCream = await IceCream.findOne({"name":recName});
+            if (iceCream){
+                res.json({
+                    "recName" : recName,
+                    "flavor" : iceCream.flavor,
+                })
+            }
+        }   
     }
 })
 //--------------------selected ice cream json--------------------------------//

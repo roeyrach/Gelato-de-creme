@@ -120,6 +120,7 @@
 
 		<!-- footer -->
         <script>
+            
             $.get('/recommendedIceCream',function(data,status){
                 if (data.flavor === undefined && data.recName === undefined){
                     $("#toShowHistroy").css('visibility','hidden');
