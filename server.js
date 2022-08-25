@@ -77,7 +77,31 @@ app.get("/chat", isGuest, function(req,res){
 app.get("/chatInner", isGuest, function(req,res){
     userName = req.query.username;
     res.sendFile(__dirname + "/public/chatInner.html");
+<<<<<<< Updated upstream
     console.log(userName);
+=======
+    // console.log(userName);
+});
+//---------------------------------Chat--------------------------------//
+io.on('connection', socket =>{
+    socket.emit('message', formatMessage(MyName,'Welcome to Gelato de Creme Chat'));
+    //Broadcast when a user connects
+    socket.broadcast.emit('message', formatMessage(MyName,'A user has joined the chat'));
+    //Broadcast when a user disconncets
+    socket.on('disconnect', ()=>{
+        io.emit('message', formatMessage(MyName,'A user has left the chat'))
+    });
+    //Listen for chat message
+    socket.on('chatMessage', (msg)=>{
+        io.emit('message', formatMessage(userName,msg));
+    })
+});
+//---------------------------------------//
+//guest's routes
+//---------------------------------------//
+app.get("/", isGuest, function(req,res){
+    res.sendFile(__dirname + "/public/index.html");
+>>>>>>> Stashed changes
 });
 //----------sign up---------------------//
 app.get("/signup",isGuest,function(req,res){

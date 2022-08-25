@@ -80,6 +80,7 @@ a {
 }
 
 .chat-form-container {
+	max-width: 1100px;
 	padding: 20px 30px;
 	background-color: var(--dark-color-a);
 }
