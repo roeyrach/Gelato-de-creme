@@ -95,15 +95,15 @@
                 }
                 center.push(item);
             }
+            console.log(center);
             let maps = [];
             let markers = [];
             let infoWindows = [];
+            map = new google.maps.Map(document.getElementById("map1"), {
+                    center : center[0],
+                    zoom: 10,
+            });
             for(let i =0; i < center.length; i++){
-                map = new google.maps.Map(document.getElementById("map1"), {
-                    center : center[i],
-                    zoom: 17,
-                });
-                maps.push(map);
                 let number = i;
                 let newNumber = i+1;
                 const labelStr = newNumber.toString();
@@ -111,18 +111,13 @@
                     position: center[i],
                     map:map,
                     label: labelStr,
-                    title: "New Delhi",
                     draggable: false,
                     animation: google.maps.Animation.DROP
                 });
-                markers.push(marker);
-                const infoWindow = new google.maps.InfoWindow({
+                let infoWindow = new google.maps.InfoWindow({
                     content: "<p><b>" + data[i].address + "</b></p>"
                 })
-                infoWindows.push(infoWindow);
-            }
-            for (let i = 0; i < center.length; i++){
-                infoWindows[i].open(maps[i],markers[i])
+                infoWindow.open(map,marker);
             }
         });
         window.initMap = initMap;

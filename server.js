@@ -97,12 +97,12 @@ app.post('/signup', async (req,res) =>{
 
     const hasdPsw = await bcrypt.hash(password, 12);
     if (fullname.includes(" ") && email.includes("@") && email.includes(".") && password.length >= 6){
-    user = new User({
-        fullname,
-        email,
-        password: hasdPsw,
-        admin:false,
-    });
+        user = new User({
+            fullname,
+            email,
+            password: hasdPsw,
+            admin:false,
+        });
         await user.save();
         res.redirect("/signin");
     }else{
@@ -138,7 +138,7 @@ app.post("/signin",async (req,res)=>{
     }
 });
 //user's routes
-//-------reservation--------------------------//
+//-------------------reservation--------------------------//
 app.get("/userMenu",isAuth,(req,res)=>{
     res.sendFile(__dirname + "/public/userMenu.html");
 });
@@ -517,6 +517,9 @@ app.get("/resPerDate",async(req,res)=>{
 //----------------------------Google Maps-----------------------------//
 app.get("/googleMaps",(req,res)=>{
     res.sendFile(__dirname + "/public/googleMaps.html");
+})
+app.get("/googleMapsUser",(req,res)=>{
+    res.sendFile(__dirname + "/public/googleMapsUser.html");
 })
 //---------------------------all gelaterias--------------------------//
 app.get("/showGel",async(req,res)=>{

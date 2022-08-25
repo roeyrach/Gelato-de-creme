@@ -17,21 +17,47 @@
 		/>
 		<!-- custom css -->
 		<link rel="stylesheet" href="/css/style.css" />
+		<style>
+			#stage {
+			position: relative;
+			width: 200px;
+			height: 160px;
+			border: 1px solid grey;
+			}
+			canvas {
+			position: absolute;
+			}
+			button {
+			margin: 5px 0px;
+			color: white;
+			border: 0px;
+			border-bottom: 3px solid #356f7d;
+			background-color: #4795a7;
+			padding: 5px 10px;
+			cursor: pointer;
+			position: relative;
+			transition: 0.2s ease;
+			top: 0px;
+			}
+			button:active {
+			top: 3px;
+			border-bottom: 0px solid #356f7d;
+			transition: 0.2s ease;
+			}
+		</style>
 	</head>
 	<body>
 		<section class="header">
 			<a href="#" class="logo">
 				<i class="fas fa-ice-cream"></i> Gelato de creme
 			</a>
-
 			<nav class="navbar">
 				<a href="#about">home</a>
-				<a href="#menu">menu</a>
 				<a href="#contact">contact us</a>
 				<a href="signup">sign up</a>
 				<a href="signin">sign in</a>
 				<a href="chat">Chat</a>
-				<a href="googleMaps">Our Stores</a>
+				<a href="googleMapsUser">Our Stores</a>
 
 			</nav>
 
@@ -52,11 +78,16 @@
 			</a>
 		</div>
 
+
 		<!-- about us -->
 
+		<div id="stage" style="align-items: center; align-self: center;"></div>
 		<section class="about" id="about">
 			<h1 class="heading">about us</h1>
-
+			<video width="320" height="240" autoplay controls re  style="align-items: center;">
+				<source src="/video1.mp4" type="video/mp4">
+				  Your browser does not support the video tag.
+			</video>
 			<div class="row">
 				<div class="image">
 					<img src="/images/iceCreamAboutUs.jpg" alt="" />
@@ -76,114 +107,10 @@
 					</p>
 				</div>
 			</div>
-
-			<video width="320" height="240" controls>
-				<source src="/public/images/pexels-roman-odintsov-5659616.mp4" type="video/mp4">
-			  Your browser does not support the video tag.
-			  </video>
+			 
 		</section>
-
+		
 		<!-- about us -->
-
-		<!-- menu -->
-
-		<section class="menu" id="menu">
-			<h1 class="heading">our menu</h1>
-
-			<div class="box-container">
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-1.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real strawberry ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$12.66 <span>19.95</span></div>
-					</div>
-				</div>
-
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-2.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real vanilla ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$12.66 <span>19.95</span></div>
-					</div>
-				</div>
-
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-3.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real blueberry ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$12.66 <span>19.95</span></div>
-					</div>
-				</div>
-
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-4.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real lemon ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$15.66 <span>19.95</span></div>
-					</div>
-				</div>
-
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-5.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real plum ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$16.66 <span>19.95</span></div>
-					</div>
-				</div>
-
-				<div class="box">
-					<div class="image">
-						<img src="/images/menu-6.png" alt="" />
-					</div>
-					<div class="content">
-						<h3 class="title">real raspberry ice cream</h3>
-						<p>
-							Pellentesque Mollis Urna Tincidunt Dui Malesuada Tincidunt. Nunc Auctor
-							Lacus Vehicula Sollicitudin Feugiat. Curabitur At Nibh Porttitor,
-							Tristique Massa Metus.
-						</p>
-						<div class="price">$15.66 <span>19.95</span></div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- menu -->
 
 		<!-- contact us -->
 
@@ -246,7 +173,448 @@
 		<script src="/js/script.js"></script>
 
 		<script>
-			lightGallery(document.querySelector(".gallery .gallery-container"))
+		lightGallery(document.querySelector(".gallery .gallery-container"))
+		let utils = {};
+
+		(function(pen) {
+
+		let stage = null;
+
+		pen.setStage = function(stageId) {
+			stage = document.getElementById(stageId);
+		};
+		pen.setBackgroundColor = function(color) {
+			if (stage) {
+				stage.style.backgroundColor = color;
+			}
+		};
+
+		// this is the constructor.
+		pen.graphic = function(o = {}) {
+
+			this.reqIds = [];
+			this.canvas = document.createElement('canvas');
+
+			// then, we set the width and height 
+			this.canvas.width = stage.clientWidth;
+			this.canvas.height = stage.clientHeight;
+			this.canvas.setAttribute('role', 'img');
+
+			if (o.label) {
+				this.canvas.setAttribute('aria-label', o.label);
+			}
+			if (o.zIndex) {
+				this.canvas.style.zIndex = o.zIndex;
+			}
+
+			stage.appendChild(this.canvas);
+
+			this.ctx = this.canvas.getContext('2d');
+
+			this.ctx.imageSmoothingEnabled = false;
+
+			// let's iterate through the keys of what we passed in.
+			for (key of Object.keys(o)) {
+				this[key] = o[key];
+			}
+			this.reset();
+
+		};
+		pen.graphic.prototype.cancelFrames = function() {
+
+			while (this.reqIds.length > 0) {
+				let reqId = this.reqIds.pop();
+				window.cancelAnimationFrame(reqId);
+			}
+
+		}
+		pen.graphic.prototype.reset = function() {
+			this.started = false;
+
+			this.cur = {...this.start};
+
+			if (this.cur.alpha || this.cur.alpha == 0) {
+				this.ctx.globalAlpha = this.cur.alpha;
+			}
+			if (this.reqIds.length > 0) {
+				this.cancelFrames();
+			}
+		};
+		// translate the coordinates to the actual canvas.
+		pen.graphic.prototype.rectRender = function() {
+			this.ctx.fillStyle = this.fill;
+			this.ctx.fillRect(this.cur.x, this.cur.y, this.width, this.height);
+		};
+
+		// let's use the graphic properties to render the text.
+		pen.graphic.prototype.textRender = function() {
+			this.ctx.fillStyle = this.color;
+			this.ctx.textAlign = this.align;
+			this.ctx.font = this.font;
+			this.ctx.fillText(this.text, this.cur.x, this.cur.y)
+		}
+		pen.graphic.prototype.circleRender = function() {
+
+			this.ctx.beginPath();
+
+			this.ctx.arc(this.cur.x, this.cur.y, this.radius, 0, 2 * Math.PI);
+
+			if (this.stroke) {
+				this.ctx.lineWidth = this.lineWidth || 1;
+				this.ctx.strokeStyle = this.stroke;
+				this.ctx.stroke();
+			}
+			if (this.fill) {
+				this.ctx.fillStyle = this.fill;
+				this.ctx.fill();
+			}
+		}
+
+		pen.graphic.prototype.imageRender = function() {
+			const render = () => {
+			// establish default parameters
+			let params = [this.img, this.cur.x, this.cur.y];
+		
+				// check for a scale property
+				if (this.scale) {
+					// calculate width and height
+					let w = this.img.width*this.scale;
+					let h = this.img.height*this.scale;
+					
+					// add to our parameter set
+					params.push(w,h);
+				}
+				// call drawImage with our parameters
+				this.ctx.drawImage(...params);
+			};
+			
+			if (!this.img || !this.img.src) {
+				this.img = new Image();
+				this.img.src = this.src;
+				this.img.onload = function() {
+					render();
+				};
+			} else {
+				render();
+			}
+		}
+
+		// method for drawing a star
+		pen.graphic.prototype.starRender = function() {
+
+			// set shape properties
+			let numPoints = this.numPoints || 5;
+			// set inner and outer radius
+			let outerRadius = this.outerRadius || 100;
+			let innerRadius = this.innerRadius || 50;
+
+			// establish the current center point
+			let cx = this.cur.x || 0;
+			let cy = this.cur.y || 0;
+
+			// set centerpoint
+			this.ctx.lineWidth = this.lineWidth || 1;
+			this.ctx.strokeStyle = this.stroke || '#000';
+
+			// start the path
+			this.ctx.beginPath();
+
+			// write a function called drawLine.
+
+			// move to moves the pen to the start curition.
+			// lineTo keeps the penDown.
+			const draw = (radius, angle, action) => {
+				// use cosine to get horizontal coordinate
+				let x = cx + radius * Math.cos(angle);
+				// use sin to get vertical coordinate
+				let y = cy + radius * Math.sin(angle);
+				this.ctx[action](x, y);
+			};
+
+			let rotate = this.rotate || 0;
+
+			let angle = 2 * Math.PI / numPoints;
+
+			draw(outerRadius, rotate, 'moveTo');
+
+			for (var i = 0; i <= numPoints; i++) {
+
+				let outerAngle = i * angle + rotate;
+				let innerAngle = outerAngle + angle / 2;
+
+				draw(outerRadius, outerAngle, 'lineTo');
+				draw(innerRadius, innerAngle, 'lineTo');
+			}
+			// add the outline
+			this.ctx.stroke();
+
+			// add the fill
+			if (this.fill) {
+				this.ctx.fillStyle = this.fill;
+				this.ctx.fill();
+			}
+		};
+
+		pen.graphic.prototype.updateProps = function() {
+
+			for (prop in this.speed) {
+
+					let diff = Math.abs(this.cur[prop] - this.stop[prop]);
+
+					if (diff <= Math.abs(this.speed[prop])) {
+					this.cur[prop] = this.stop[prop];
+					} else {
+					this.cur[prop] += this.speed[prop]
+					}
+			}
+		}
+		pen.graphic.prototype.checkCanvasAlpha = function() {
+			if (this.speed.alpha && this.ctx.globalAlpha != this.cur.alpha) {
+				this.ctx.globalAlpha = this.cur.alpha;
+			}
+		};
+		pen.graphic.prototype.animate = async function(timeStamp) {
+
+			const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+			const frameNeeded = () => {
+				for (prop in this.speed) {
+					if (this.stop[prop] != this.cur[prop]) {
+					return true;
+					}
+				}
+				return false;
+			}
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+			// only updated props if the animation has already been started.
+			if (this.started) {
+				this.updateProps();
+				this.checkCanvasAlpha();
+			}
+			let func = this.type + 'Render';
+			
+			this[func]();
+
+			if (!this.started && this.delay) {
+				await sleep(this.delay);
+			}
+			this.started = true;
+
+			// start to check if we should repeat.
+			// if we are not at the limit yet, call the animation logic.
+			if (frameNeeded()) {
+				
+				// create an alias for "this"
+				let obj = this;
+
+				// create the callback
+				let anim = function() {
+					obj.animate();
+				};
+				// request the frame
+				let reqId = window.requestAnimationFrame(anim);
+				
+				// store the request ID
+				obj.reqIds.push(reqId);
+			}
+		}
+
+		})(utils);
+		/*
+		* END OF MICRO-LIBRARY
+		*/
+
+		/* 
+		* START OF ICE CREAM DEMO
+		*/
+
+		let demo = {};
+
+		(function(pen) {
+		
+		utils.setStage('stage');
+		// ATA
+		utils.setBackgroundColor('lightpink');
+
+		const colors = {
+			orange: '#ffc44e',
+			green: '#4795a7',
+			darkgreen: '#356f7d',
+		};
+		
+		const small_cone_src = 'https://raw.githubusercontent.com/nevkatz/canvas-demos/main/demo1/images/cone-small-vert.png';
+		
+		const large_cone_src = 'https://raw.githubusercontent.com/nevkatz/canvas-demos/main/demo1/images/ice-cream.png';
+
+		let logo_rect = new utils.graphic({
+			start: {
+				x: 10,
+				y: 256
+			},
+			speed: {
+				y: -2
+			},
+			stop: {
+				y: 53
+			},
+			height: 30,
+			width: 120,
+			zIndex: 2,
+			fill: colors.green,
+			type: 'rect',
+			label: "Logo Rectangle",
+		});
+
+		let flavors = new utils.graphic({
+			start: {
+				x: -70,
+				y: 145
+			},
+			speed: {
+				x: 4,
+			},
+			stop: {
+				x: 70
+			},
+			font: 'bold 24px Bradley Hand',
+			color: colors.darkgreen,
+			align: 'center',
+			text: "42 Flavors!",
+			delay: 1500,
+			label: "42 Flavors text",
+			type: 'text',
+		});
+
+		let nevs = new utils.graphic({
+			start: {
+				x: -10,
+				y: -10
+			},
+			speed: {
+				x: 2,
+				y: 2
+			},
+			stop: {
+				x: 70,
+				y: 45
+			},
+			font: "24px Bradley Hand",
+			color: colors.darkgreen,
+			align: 'center',
+			zIndex: 2,
+			text: "Gelato",
+			delay: 500,
+			label: "Gelato De Creme",
+			type: "text",
+		});
+		let ic_text = new utils.graphic({
+			start: {
+				x: 70,
+				y: 75,
+				alpha: 0,
+			},
+			speed: {
+				alpha: 0.02
+			},
+			stop: {
+				alpha: 1
+			},
+			font: "Bold 22px Arial",
+			color: '#fff',
+			align: 'center',
+			zIndex: 2,
+			text: "De Cream",
+			label: "Ice Cream Text",
+			type: "text",
+			delay: 1500,
+		});
+
+		let logo_circle = new utils.graphic({
+			start: {
+				x: 70,
+				y: -50
+			},
+			speed: {
+				y: 2
+			},
+			stop: {
+				y: 65
+			},
+			radius: 50,
+			fill: colors.orange,
+			stroke: colors.green,
+			lineWidth: 7,
+
+			// type: identifier,
+			label: "Nev's Ice Cream Logo Circle",
+			type: "circle",
+		});
+		let large_cone = new utils.graphic({
+			start: {
+				x: 200,
+				y: 6
+			},
+			speed: {
+				x: -1
+			},
+			stop: {
+				x: 150
+			},
+			scale:0.75,
+			src: large_cone_src,
+			type: 'image',
+			label: "ice cream cone with three scoops"
+		});
+		
+
+		let small_cone = new utils.graphic({
+			start: {
+				x: 60,
+				y: 85,
+				alpha: 0
+			},
+			speed: {
+				alpha: 0.02
+			},
+			stop: {
+				alpha: 1
+			},
+			src: small_cone_src,
+
+			type: 'image',
+			delay: 2000,
+			label: "logo cone"
+		});
+
+		pen.init = function() {
+
+			let arr = [logo_rect, 
+						logo_circle,
+						flavors, 
+						large_cone,
+						nevs, 
+						ic_text,
+						small_cone];
+
+			for (o of arr) {
+				o.animate();
+			}
+
+			let els = document.querySelectorAll('#restart,#stage');
+			
+			for (el of els) {
+				el.addEventListener('click', function() {
+				for (o of arr) {
+					o.reset();
+					o.animate();
+				}
+				});
+
+			}
+		}
+		})(demo)
+		demo.init();
 		</script>
 
 	</body>
