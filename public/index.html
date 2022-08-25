@@ -17,6 +17,7 @@
 		/>
 		<!-- custom css -->
 		<link rel="stylesheet" href="/css/style.css" />
+		<!----Canvas CSS-->
 		<style>
 			#stage {
 			position: relative;
@@ -48,17 +49,16 @@
 	</head>
 	<body>
 		<section class="header">
-			<a href="#" class="logo">
+			<a href="/" class="logo">
 				<i class="fas fa-ice-cream"></i> Gelato de creme
 			</a>
 			<nav class="navbar">
-				<a href="#about">home</a>
+				<a href="#about">about us</a>
 				<a href="#contact">contact us</a>
 				<a href="signup">sign up</a>
 				<a href="signin">sign in</a>
 				<a href="chat">Chat</a>
 				<a href="googleMapsUser">Our Stores</a>
-
 			</nav>
 
 			<div id="menu-btn" class="fas fa-bars"></div>
@@ -80,10 +80,20 @@
 
 
 		<!-- about us -->
+		<!----Weather Widget-->
 		<a class="weatherwidget-io" href="https://forecast7.com/en/31d9734d79/rishon-letsiyon/" data-label_1="RISHON LETSIYON" data-label_2="WEATHER" data-theme="original" >RISHON LETSIYON WEATHER</a>
 		<script>
-		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+		!function(d,s,id){
+			var js,fjs=d.getElementsByTagName(s)[0];
+			if(!d.getElementById(id)){
+				js=d.createElement(s);
+				js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';
+				fjs.parentNode.insertBefore(js,fjs);
+				}
+			}
+			(document,'script','weatherwidget-io-js');
 		</script>
+
 		<section class="about" id="about">
 			<h1 class="heading">about us</h1>
 			<div class="row">
@@ -104,8 +114,6 @@
 						The story behind each ice cream begins with the preparation of the raw materials we use in yuval's basment located near the college of managemnt. A green and magical place, where the factory team together with the development team, work diligently every day on the preparation of our ice cream ingredients and all of course, made in blue and white.
 						The raw materials we produce with great skill start with the ice cream bases, which we prepare fresh in our factory. We produce a wide variety of rich creams that combine pistachios, almonds, nuts that we roast using unique technologies in our factory and more. They give the ice cream the winning textural combination of softness and crunchiness.
 						All the favorite ice cream ingredients are sent together to Gelato De Creme branches every day to make the favorite ice cream.
-
-
 					</p>
 					<div id="stage" style="align-items: center; align-self: center; justify-self: center;"></div>
 				</div>

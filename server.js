@@ -106,7 +106,7 @@ app.post('/signup', async (req,res) =>{
         await user.save();
         res.redirect("/signin");
     }else{
-		//res.redirect("/signup");
+		res.redirect("/signup");
     }
 }); 
 //----------sign in---------------------//
@@ -231,10 +231,11 @@ app.post("/finishOrder",async(req,res)=>{
             content
         });
         for (let i =0; i<arr.length; i++){
-            const name = arr[i].split("_"); 
+            const name = arr[i].split("_")[0]; 
             const ice = await IceCream.findOne({"name":name});
-            const count = ice.countOrdered;
-            await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": count+1 }},{new:true},(err,doc)=>{
+            let count = ice.countOrdered;
+            const newCount = count +1;
+            await IceCream.findOneAndUpdate({"name":name},{$set:{"countOrdered": newCount }},{new:true},(err,doc)=>{
             });
             await User.findOne({"email":req.session.email},function(err,doc){
                 if (doc.listOfOrders.get(name[0]) != undefined){
