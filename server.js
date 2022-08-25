@@ -68,7 +68,7 @@ io.on('connection', socket =>{
     socket.broadcast.emit('message', formatMessage(MyName,'A user has joined the chat'));
     //Broadcast when a user disconncets
     socket.on('disconnect', ()=>{
-        io.emit('message', formatMessage(MyName,'A user has joined the chat'))
+        io.emit('message', formatMessage(MyName,'A user has left the chat'))
     });
     //Listen for chat message
     socket.on('chatMessage', (msg)=>{
@@ -211,7 +211,12 @@ app.post("/finishOrder",async(req,res)=>{
         const orderNumber = Math.random();
         const email = req.session.email;
         const date = new Date().toISOString().slice(0, 10);
-        const price = 0;
+        const name = req.session.selected.split("_")[0];
+        const quantity = req.session.selected.split("_")[1];
+        const iceCream = await IceCream.findOne({"name":name});
+        const pricPerIceCream = iceCream.price;
+        const price = pricPerIceCream * quantity;
+        console.log(price);
         const content = req.session.selected;
         const arr = content.split(",");
         let reservation = await Reservation.findOne({ orderNumber });

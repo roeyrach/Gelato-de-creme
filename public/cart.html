@@ -53,6 +53,38 @@
             <button style="visibility: hidden; background-color: aquamarine; border-radius: 5px; border-color:white;	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); font-size: x-large;" id="btnFinishOrder">Order</button>
         </form>
     </section>
+    <!-- footer -->
+
+		<section class="footer">
+			<div class="icons-container">
+				<div class="icons">
+					<i class="fas fa-map"></i>
+					<h3>address</h3>
+						<p>
+							Elie Wiesel St 2, Rishon LeTsiyon,  Israel
+						</p>
+				</div>
+
+				<div class="icons">
+					<i class="fas fa-phone"></i>
+					<h3>phone</h3>
+					<p>03-333-3333</p>
+					<p>07-777-7777</p>
+				</div>
+
+				<div class="icons">
+					<i class="fas fa-clock"></i>
+					<h3>opening hours</h3>
+					<p>
+						Sunday - Thursday : 9:00 - 22:00 <br />
+						Friday: 9:00 - 11:00
+					</p>
+				</div>
+			</div>
+
+		</section>
+
+		<!-- footer -->
     <script>
         let arr = $.get("/selectedIceCreams",function(data,status){
             for (let i =0; i<data.length; i++){

@@ -17,11 +17,6 @@
     </style>
         
 
-    <!-- swiper -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
-    />
     <!-- lightgallery -->
     <link
         rel="stylesheet"
@@ -50,16 +45,13 @@
         <div id="menu-btn" class="fas fa-bars"></div>
     </section>
     <section id="sign" class="sign">
-        <h1 class="heading">We May Know A Little Bit About You...</h1>
-        <h2 onclick="recommend()" id="toShowHistroy" class="heading">Click To Find What Do We Know</h2>
         <h2 style="font-size: x-large;text-align: center;">According To Your History We Recommend You To Search Again:</h2>
         <h2 style="font-size: x-large;text-align: center;" id="historyFlavor"></h2>
         <h2 style="font-size: x-large;text-align: center;" id="historyName"></h2>
-
     </section>
     <section>
         <section id="sign" class="sign">
-            <h1 class="heading">Search</h1>
+            <h1 class="heading">Search</h       1>
             <h1 style="font-size: x-large;">If You Want Just To Filter Make Sure Other Options Are Empty!</h1>
             <form action="/reservationSelect" method="get">
                 <div class="box-container">
@@ -95,5 +87,50 @@
                 </div>
                 </form>
         </section> 
+        <!-- footer -->
+
+		<section class="footer">
+			<div class="icons-container">
+				<div class="icons">
+					<i class="fas fa-map"></i>
+					<h3>address</h3>
+						<p>
+							Elie Wiesel St 2, Rishon LeTsiyon,  Israel
+						</p>
+				</div>
+
+				<div class="icons">
+					<i class="fas fa-phone"></i>
+					<h3>phone</h3>
+					<p>03-333-3333</p>
+					<p>07-777-7777</p>
+				</div>
+
+				<div class="icons">
+					<i class="fas fa-clock"></i>
+					<h3>opening hours</h3>
+					<p>
+						Sunday - Thursday : 9:00 - 22:00 <br />
+						Friday: 9:00 - 11:00
+					</p>
+				</div>
+			</div>
+
+		</section>
+
+		<!-- footer -->
+        <script>
+            $.get('/recommendedIceCream',function(data,status){
+                if (data.flavor === undefined && data.recName === undefined){
+                    $("#toShowHistroy").css('visibility','hidden');
+                    $("#historyFlavor").text(data.text).css('color','red'); 
+                }else{
+                    $("#toShowHistroy").css('visibility','hidden');
+                    $("#historyFlavor").css('color','blue').text("Flavor - " + data.flavor); 
+                    $("#historyName").css('color','blue').text("Or More Specific Ice Cream - " + data.recName);
+                }
+                    
+            })
+        </script>
 </body>
 </html>
